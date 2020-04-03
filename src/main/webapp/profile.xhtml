@@ -1,0 +1,117 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:ui="http://java.sun.com/jsf/facelets" 
+		xmlns:h="http://java.sun.com/jsf/html" 
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:eztl="http://java.sun.com/jsf/composite/eztl">
+
+<ui:composition template="template.html">
+	<ui:param name="user" value="#{profileBean.user}" />
+	<ui:param name="action" value="profile.xhtml?id=#{user.id}" />
+	<ui:define name="title">#{user.name}</ui:define>
+	<ui:define name="content">
+		<eztl:window
+			title="#{user.name}"
+			>
+			<div class="profile-container">
+			
+				<!-- Left block with avatar -->
+				<div class="profile-left-block">
+					<img class="profile-avatar" src="#{user.getAvatarPath()}" />
+				</div>
+				
+				<!-- Right block with name and stuff -->
+				<div class="profile-right-block">
+				
+					<h:panelGroup layout="block" class="error-message" rendered="#{!user.banReason.isEmpty()}">
+						#{locale['misc.ban.bannedFor']} #{user.banReason}
+					</h:panelGroup>
+					<eztl:labeledItem label="#{locale['profile.info.realName']}">
+						<div>#{user.realName.isEmpty() ? locale['profile.info.unknownRealName'] : user.realName}</div>
+					</eztl:labeledItem>
+					<eztl:labeledItem label="#{locale['misc.ranks.rankLabel']}">
+						<div class="rank-#{user.getRankStyle()}">
+							#{locale[user.getRankName()]}
+						</div>
+					</eztl:labeledItem>
+					<eztl:labeledItem label="#{locale['profile.info.startedTopics']}">
+						<div class="button-row-set">
+							<div>#{user.topics.size()}</div>
+							<a href="search.xhtml?search-query=#{user.name}&amp;match-case=on&amp;match-whole-query=on&amp;search-in=topics&amp;include-author-nickname=on&amp;search-button=Search">
+								<input type="button" class="input-button" value="#{locale['profile.info.viewButton']}" />
+							</a>
+						</div>
+					</eztl:labeledItem>
+					<eztl:labeledItem label="#{locale['profile.info.wrotePosts']}">
+						<div class="button-row-set">
+							<div>#{user.posts.size()}</div>
+							<a href="search.xhtml?search-query=#{user.name}&amp;match-case=on&amp;match-whole-query=on&amp;search-in=posts&amp;include-author-nickname=on&amp;search-button=Search">
+								<input type="button" class="input-button" value="#{locale['profile.info.viewButton']}" />
+							</a>
+						</div>
+					</eztl:labeledItem>
+					
+					<!-- Complaints -->
+					<ui:param name="notBanned" value="#{user.banReason == null or user.banReason.isEmpty()}" />
+					
+					<eztl:labeledItem label="#{locale['misc.addComplaint.label']}" rendered="#{profileBean.canComplain and notBanned}">
+						<form method="POST" action="#{action}" class="button-row-set">
+							<input type="text" class="input-text" name="reason" placeholder="#{locale['misc.addComplaint.placeholder']}" required="required" />
+							<input type="submit" class="input-button" name="complain" value="#{locale['misc.addComplaint.button']}" />
+						</form>
+					</eztl:labeledItem>
+					<h:panelGroup layout="block" class="notification" rendered="#{!profileBean.canComplain and notBanned and profileBean.complaint != null}">
+						#{locale['profile.complaintLabel']} "#{profileBean.complaint.getReason()}"
+						<form method="POST" action="#{action}">
+							<input type="submit" class="input-button input-red-button-color" name="remove-complaint" value="#{locale['misc.removeComplaintButton']}" />
+						</form>
+					</h:panelGroup>
+					
+					<!-- Admin stuff -->
+					<ui:param name="currentRank" value="#{middleware.user.rank}" />
+					<ui:param name="isAdmin" value="#{currentRank == 0 or currentRank lt user.rank}" />
+					<ui:param name="isBanned" value="#{user.banReason != null and !user.banReason.isEmpty()}" />
+					
+					<!-- Change rank -->
+					<eztl:labeledItem label="#{locale['profile.changeRank.label']}" rendered="#{isAdmin}">
+						<form method="POST" action="#{action}" class="button-row-set">
+							<select class="input-text" name="new-rank">
+								<ui:param name="rankList" value="#{user.getRankList()}" />
+								<ui:param name="r" value="#{currentRank == 0 ? -1 : currentRank}" />
+								<ui:repeat value="#{rankList.keySet()}" var="rankNumber" size="#{4 - r}">
+									<option value="#{rankNumber}">#{locale[rankList.get(rankNumber)]}</option>
+								</ui:repeat>
+							</select>
+							<input type="submit" name="change-rank" class="input-button" value="#{locale['profile.changeRank.button']}" />
+						</form>
+					</eztl:labeledItem>
+					
+					<!-- Ban form -->
+					<eztl:labeledItem label="#{isBanned ? locale['misc.ban.changeBanReason'] : locale['misc.ban.banUser']}" rendered="#{isAdmin}">
+						<form method="POST" action="#{action}" class="button-row-set">
+							<input type="text" name="ban-reason" class="input-text" placeholder="#{locale['misc.ban.banReasonPlaceholder']}" required="required"/>
+							<input type="submit" name="ban" class="input-button input-red-button-color" value="#{isBanned ? locale['misc.ban.changeButton'] : locale['misc.ban.banButton']}" />
+						</form>
+					</eztl:labeledItem>
+					
+					<!-- Unban form -->
+					<ui:fragment rendered="#{isAdmin and isBanned}">
+						<form method="POST" action="#{action}">
+							<input type="submit" class="input-button" name="unban" value="#{locale['misc.ban.unbanButton']}" />
+						</form>
+					</ui:fragment>
+					
+					<!-- Remove buttons -->
+					<ui:fragment rendered="#{isAdmin}">
+						<form method="POST" action="#{action}" class="button-row-set">
+							<input type="submit" name="remove-all-posts" class="input-button input-red-button-color" value="#{locale['profile.remove.posts']}"/>
+							<input type="submit" name="remove-all-topics" class="input-button input-red-button-color" value="#{locale['profile.remove.topicsAndPosts']}" />
+							<input type="hidden" />
+						</form>
+					</ui:fragment>
+					
+				</div>
+			</div>
+		</eztl:window>
+	</ui:define>
+</ui:composition>
+</html>

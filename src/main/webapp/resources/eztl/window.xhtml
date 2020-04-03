@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+	
+<composite:interface>
+	<composite:attribute name="user" type="ez.forum.entities.User" />
+	<composite:attribute name="title" />
+	<composite:attribute name="time" />
+	<composite:attribute name="customid" />
+</composite:interface>
+
+<composite:implementation>
+	<ui:param name="user" value="#{cc.attrs.user}" />
+	<ui:param name="rankStyle" value="#{user.getRankStyle()}" />
+	<ui:param name="avatar" value="#{user.getAvatarPath()}" />
+	<div class="window-container" id="#{cc.attrs.customid}">
+		<div class="window-title">
+			<a class='window-profile-link' href='profile.xhtml?id=#{user.id}'>
+				<div class="window-author">
+					<ui:fragment rendered="#{avatar != null}">
+						<img class="window-avatar" src="#{avatar}" />
+					</ui:fragment>
+					<div class="window-nickname">#{user.name} <h:panelGroup class="window-star rank-#{rankStyle}" rendered="#{rankStyle != null}">★</h:panelGroup></div>
+				</div>
+			</a>
+			<div class="window-name">#{cc.attrs.title}</div>
+			<div class="window-time">#{cc.attrs.time}</div>
+		</div>
+		<div class="window-content">
+			<composite:insertChildren />
+		</div>
+	</div>
+</composite:implementation>
+</html>

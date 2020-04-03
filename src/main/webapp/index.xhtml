@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:ui="http://java.sun.com/jsf/facelets" 
+		xmlns:h="http://java.sun.com/jsf/html" 
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:eztl="http://java.sun.com/jsf/composite/eztl">
+
+<ui:composition template="template.html">
+	<ui:define name="title">#{locale['index.title']}</ui:define>
+	<ui:param name="dataFlex" value="true" />
+	<ui:param name="isAdmin" value="#{indexBean.isAdmin}" />
+	<ui:define name="content">
+		
+		<!-- Popup asking if admin really wants to remove a section or subsection -->
+		<eztl:deletePopup customAction="index.xhtml"/>
+		
+		
+		<!-- Configuration window -->
+		<eztl:window title="#{locale['index.config.configTitle']}">
+			<form method="POST" action="index.xhtml">
+			
+				<!-- Languages -->
+				<eztl:labeledItem label="#{locale['index.config.languageLabel']}">
+					<select class="input-text" name="change-locale">
+						<ui:repeat value="#{indexBean.getLocales().keySet()}" var="loc">
+							<option
+							value="#{loc}"
+							selected="#{middleware.getLocale().equals(indexBean.getLocales().get(loc)) ? 'selected' : ''}">
+							#{loc}
+							</option>
+						</ui:repeat>
+					</select>
+				</eztl:labeledItem>
+				
+				<!-- Theme -->
+				<eztl:labeledItem label="#{locale['index.config.themeLabel']}">
+					<select name="change-theme" class="input-text">
+						<ui:repeat value="#{indexBean.getThemes().keySet()}" var="theme">
+							#{middleware.getTheme()}
+							<option
+							value="#{theme}"
+							selected="#{middleware.getTheme().equals(indexBean.getThemes().get(theme)) ? 'selected' : ''}">
+							#{theme}
+							</option>
+						</ui:repeat>
+					</select>
+				</eztl:labeledItem>
+				
+				<!-- Sumbit button -->
+				<input type="submit" class="input-button" name="change-info" value="#{locale['index.submitButton']}" />
+				
+			</form>
+		</eztl:window>
+		
+		<!-- Sections -->
+		<ui:repeat value="#{indexBean.sections}" var="section">
+			<eztl:window title="#{section.name}">
+				
+				<!-- Subsections -->
+				<ui:repeat value="#{section.subsections}" var="subsection">
+					<div class="list-item-container">
+						<a class="list-item-link" href="subsection.xhtml?id=#{subsection.id}">
+							> #{subsection.name}
+						</a>
+						<!-- Remove subsection button -->
+						<eztl:removeButton
+						customAction="index.xhtml"
+						sectionName="#{locale['removeButton.removeSubsection']} &quot;#{subsection.name}&quot;"
+						sectionId="#{subsection.id}"
+						submitName="remove-subsection"
+						isNormalButton="false"
+						rendered="#{isAdmin}"
+						/>
+					</div>
+				</ui:repeat>
+				
+				<!-- Add subsection form -->
+				<eztl:labeledItem label="#{locale['index.addSubsection.label']}" rendered="#{isAdmin}">
+					<form method="POST" action="index.xhtml" class="button-row-set">
+						<input type="text" name="new-subsection-name" class="input-text" placeholder="#{locale['index.addNamePlaceholder']}" required="required" />
+						<input type="hidden" name="section-id" value="#{section.id}" />
+						<input type="submit" name="new-subsection" value="#{locale['index.addButton']}" class="input-button" />
+					</form>
+				</eztl:labeledItem>
+				
+				<!-- Remove section button -->
+				<eztl:removeButton
+					customAction="index.xhtml"
+					sectionName="#{locale['removeButton.removeSection']} &quot;#{section.name}&quot;"
+					sectionId="#{section.id}"
+					submitName="remove-section"
+					rendered="#{isAdmin}"
+				/>
+				
+			</eztl:window>
+		</ui:repeat>
+		
+		<!-- Add section form -->
+		<eztl:window title="#{locale['index.addSection.windowTitle']}" rendered="#{isAdmin}">
+			<eztl:labeledItem label="#{locale['index.addSection.label']}">
+				<form method="POST" action="index.xhtml" class="button-row-set">
+					<input type="text" name="new-section-name" class="input-text" placeholder="#{locale['index.addNamePlaceholder']}" required="required" />
+					<input type="submit" name="new-section" value="#{locale['index.addButton']}" class="input-button" />
+				</form>
+			</eztl:labeledItem>
+		</eztl:window>
+		
+	</ui:define>
+</ui:composition>
+</html>

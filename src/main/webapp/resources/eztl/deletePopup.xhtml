@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+	<composite:attribute name="customAction" required="true" />
+	<composite:attribute name="submitName" default="remove-form" />
+</composite:interface>
+
+<composite:implementation>
+	<script>
+	var desc1 = "#{locale['deletePopup.description.p1']}";
+	var desc2 = "#{locale['deletePopup.description.p2']}";
+	</script>
+	<script>
+	//<![CDATA[
+	function show_popup(id, submitName, name) {
+		// Add text to form
+		var text = document.getElementById("text");
+		text.innerHTML = desc1 + " " + name + "?<br>" + desc2;
+
+		// Add id to the form
+		var hiddenId = document.getElementById("hidden-id");
+		hiddenId.setAttribute("value", id);
+
+		var submitRemoval = document.getElementById("submit-removal");
+		submitRemoval.setAttribute("name", submitName);
+
+		// Show the popup
+		var popup = document.getElementById("popup");
+		popup.className = "index-popup";
+	}
+
+	function hide_popup() {
+		var popup = document.getElementById("popup");
+		popup.className = "hidden";
+	}
+	//]]>
+	</script>
+	
+	<div class="hidden" id="popup">
+		<div class="popup-content" id="content">
+			<div id="text"></div>
+			<form method="POST" action="#{cc.attrs.customAction}" id="form">
+				<input type="hidden" id="hidden-id" name="section-id" />
+				<input type="submit" id="submit-removal" value="#{locale['deletePopup.yesButton']}" class="input-button input-red-button-color" />
+				<input type="button" value="#{locale['deletePopup.noButton']}" onclick="hide_popup();" class="input-button" />
+			</form>
+		</div>
+	</div>
+</composite:implementation>
+</html>

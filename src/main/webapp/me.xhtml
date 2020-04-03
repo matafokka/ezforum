@@ -1,0 +1,114 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:ui="http://java.sun.com/jsf/facelets" 
+		xmlns:h="http://java.sun.com/jsf/html" 
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:eztl="http://java.sun.com/jsf/composite/eztl">
+
+<ui:composition template="template.html">
+	<ui:param name="user" value="#{meBean.user}" />
+	<ui:define name="title">#{locale['me.pageTitle']}</ui:define>
+	<ui:define name="content">
+		<eztl:window
+			title="#{locale['me.windowTitle']}"
+			>
+			<div class="profile-container">
+				
+				<!-- Left page with avatar and stuff -->
+				<div class="profile-left-block">
+					<img class="profile-avatar" src="#{user.getAvatarPath()}" />
+					
+					<!-- Update error messages -->
+					<h:panelGroup layout="block" class="error-message" style="text-align: left;" rendered="#{!meBean.avatarErrors.isEmpty()}">
+						#{locale['me.errors.title']}
+						<ul>
+							<ui:repeat value="#{meBean.avatarErrors}" var="error">
+								<li>#{locale[error]}</li>
+							</ui:repeat>
+						</ul>
+					</h:panelGroup>
+					
+					<!-- Update form -->
+					<form method="POST" action="me.xhtml" enctype="multipart/form-data">
+						<div class="input-button input-file-container">
+							<div class="input-file-text-wrapper">
+								#{locale['me.avatar.uploadButton']}
+							</div>
+							<input type="file" accept=".jpg, .jpeg, .png, .gif" name="avatar-upload" />
+						</div>
+						<input type="submit" name="change-avatar" value="#{locale['me.avatar.confirmButton']}" class="input-button" />
+					</form>
+					
+					<!-- Notification with requirements to avatars -->
+					<div class="notification" style="text-align: left;">
+						#{locale['me.avatar.notification.p1']}
+						<ul>
+							<li>#{locale['me.avatar.notification.p2']}</li>
+							<li>#{locale['me.avatar.notification.p3']}</li>
+							<li>#{locale['me.avatar.notification.p4']}</li>
+						</ul>
+					</div>
+				</div>
+				
+				<!-- Right block with info and stuff -->
+				<div class="profile-right-block">
+				
+					<!-- Notifications -->
+					<div class="notification">
+						#{locale['me.info.notification']}
+					</div>
+					<h:panelGroup layout="block" class="notification" rendered="#{meBean.infoUpdateAttempted and meBean.infoUpdateErrors.isEmpty()}">
+						#{locale['me.info.success']}
+					</h:panelGroup>
+					<h:panelGroup layout="block" class="error-message" style="text-align: left;" rendered="#{!meBean.infoUpdateErrors.isEmpty()}">
+						#{locale['me.info.errors.title']}
+						<ul>
+							<ui:repeat value="#{meBean.infoUpdateErrors}" var="error">
+								<li>#{locale[error]}</li>
+							</ui:repeat>
+						</ul>
+					</h:panelGroup>
+					
+					<!-- Update form -->
+					<form method="POST" action="me.xhtml">
+						
+						<!-- Real name -->
+						<eztl:labeledItem label="#{locale['me.info.realNameLabel']}">
+							<input type="text" name="change-name" class="input-text" value="#{user.realName}" />
+						</eztl:labeledItem>
+						
+						<!-- Email -->
+						<eztl:labeledItem label="#{locale['me.info.emailLabel']}">
+							<input type="email" name="change-email" class="input-text" value="#{user.getDecryptedEmail()}" />
+						</eztl:labeledItem>
+						
+						<!-- Password -->
+						<eztl:labeledItem label="#{locale['me.info.passwordLabel']}">
+							<input type="password" name="change-password" class="input-text" value="" />
+						</eztl:labeledItem>
+						
+						<!-- Repeat password -->
+						<eztl:labeledItem label="#{locale['me.info.repeatPasswordLabel']}">
+							<input type="password" name="change-repeat-password" class="input-text" value="" />
+						</eztl:labeledItem>
+						
+						<input type="submit" value="#{locale['me.info.button']}" name="change-info" class="input-button" />
+					</form>
+					
+					<!-- Admin panel button -->
+					<ui:fragment rendered="#{user.rank le 2}">
+						<a href="admin.xhtml">
+							<input type="button" value="#{locale['me.misc.adminButton']}" name="admin-button" class="input-button" />
+						</a>
+					</ui:fragment>
+					
+					<!-- Sign out button -->
+					<form method="POST" action="me.xhtml">
+						<input type="submit" value="#{locale['me.misc.signOutButton']}" name="signout" class="input-button" />
+					</form>
+					
+				</div>
+			</div>
+		</eztl:window>
+	</ui:define>
+</ui:composition>
+</html>

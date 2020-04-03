@@ -1,0 +1,394 @@
+/* Background is fixed by default. It won't scroll when user scrolls page. */
+.body-background {
+	background: white;
+}
+
+a {
+	color: crimson;
+}
+
+a:hover {
+	color: darkred;
+	text-decoration: underline;
+}
+
+fieldset {
+	margin-bottom: 1rem;
+	border: 0.1rem solid red;
+	border-radius: 1rem;
+	border-bottom: none;
+}
+
+legend {
+	color: black;
+	border: 0.1rem solid crimson;
+	border-radius: 0.7rem;
+	padding: 0.15rem;
+}
+
+/* Object will contain only user-formatted text */
+object {
+	width: 0rem;
+	height: 0rem;
+}
+
+/*
+Drop-down menu. Used only for themes.
+The box itself styled by input-text class.
+Here we're styling it's items.
+*/
+select > option {
+	background: RGB(255, 220, 220);
+}
+
+.post-code { /* [CODE] tag */
+	border: crimson;
+	color: darkred;
+}
+
+/* Header, where search in stuff is placed */
+.header {
+	background: none;
+	border-radius: 1rem;
+	border-bottom: 0.2rem solid darkred;
+	box-shadow: none;
+	align-items: center;
+	color: white;
+}
+
+.bar-icon { /* Left and right icons */
+	background: none;
+}
+
+.bar-icon:hover {
+	background-color: crimson;
+}
+
+.logo { /* Left icon */
+	border-bottom-left-radius: 0.9rem;
+	border-right: 0.2rem solid darkred;
+}
+
+.user-icon { /* Right icon */
+	border-bottom-right-radius: 0.9rem;
+	border-left: 0.2rem solid darkred;
+}
+
+.search { /* Search box */
+	border: none;
+	border-top: 0.1rem solid darkred;
+	background: rgba(255, 255, 255, 0.5);
+	color: black;
+	transition: var(--trans);
+	border-radius: 1rem;
+	padding: 0rem;
+	padding-left: 1rem;
+	width: 50%;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+.search:hover {
+	border: none;
+	border-top: 0.1rem solid darkred;
+	border-left: 0.1rem solid darkred;
+}
+
+.search:focus-within {
+	border: none;
+	border-top: 0.1rem solid crimson;
+	border-left: 0.1rem solid crimson;
+}
+
+.search-text::placeholder {
+	color: black;
+}
+
+.search-text:hover::placeholder {
+	color: darkred;
+}
+
+.search-text:focus::placeholder {
+	color: white;
+}
+
+.search-button { /* Search button */
+	background-color: none;
+	border: none;
+	border-bottom: 0.1rem solid darkred;
+	border-right: 0.1rem solid darkred;
+	border-radius: 50%;
+}
+
+.search-button:hover {
+	background-color: RGB(255, 220, 220);
+}
+
+.search:focus-within .search-button {
+	box-shadow: none;
+}
+
+.footer { /* Footer */
+	width: 100%;
+	border: none;
+	border-top: 0.2rem solid darkred;
+	border-radius: 2rem;
+	color: black;
+	box-shadow: none;
+	background: none;
+}
+
+/* Window */
+.window-container { /* The whole window container */
+	box-shadow: none;
+	border: none;
+	border-top-left-radius: 1rem;
+	border-top-right-radius: 1rem;
+	background: linear-gradient(to bottom, darkred 2rem, white 80%);
+	padding: 0.2rem;
+}
+
+/*
+Title of the window. Title is divided into 3 parts:
+	1. Link to the user profile and avatar.
+	2. Window title.
+	3. Window time.
+*/
+.window-title { 
+	color: black;
+	background: white;
+	height: 1.5rem;
+	border: none;
+	margin-bottom: 0.1rem;
+	border-radius: 1rem;
+}
+
+.window-profile-link { /* Contains link to the user profile and avatar */
+	color: crimson;
+}
+
+.window-profile-link:hover {
+	color: black;
+	transition: var(--trans);
+}
+
+.window-avatar { /* User avatar */
+	height: 1.5rem;
+	width: 3rem;
+	margin-right: 0.3rem;
+	margin-left: 0rem;
+	border: none;
+	border-radius: 2rem;
+	border-right: 0.2rem solid darkred;
+	box-sizing: border-box;
+	background-color: crimson;
+}
+
+.window-content { /* An actual content of the window */
+	border: none;
+	background: white;
+	border-top-left-radius: 1rem;
+	border-top-right-radius: 1rem;
+	margin-top: 0.1rem;
+}
+
+/* Lists. They're displayed only on index and admin pages */
+.list-item-container { /* Nicely wrap lists */
+	border: 0.09rem solid darkred;
+	border-radius: 0.5rem;
+}
+
+.list-item-container:hover {
+	background: RGB(255, 220, 220);
+	transition: var(--trans);
+}
+
+.list-item-link { /* Link in items */
+	width: 100%;
+	color: crimson;
+}
+
+/* Form elements */
+.input-text { /* Line edit boxes */
+	padding: 0.15rem;
+	padding-left: 0.01rem;
+	border: 0.1rem solid darkred;
+	border-radius: 1rem;
+	transition: var(--trans);
+}
+
+.input-text:hover {
+	box-shadow: 0rem 0rem 0rem 0.15rem darkred;
+}
+
+.input-text:focus {
+	border: 0.1rem solid darkred;
+	box-shadow: 0rem 0rem 0rem 0.07rem darkred;
+}
+
+.input-button { /* Buttons */
+	color: black;
+	border: 0.1rem solid darkred;
+	border-top: none;
+	border-left: none;
+	border-radius: 1rem;
+	background: none;
+}
+
+.input-button:hover {
+	background: RGB(255, 220, 220);
+	color: black;
+}
+
+.input-red-button-color { /* Red buttons */
+	background: var(--red-light);
+}
+
+.input-red-button-color:hover {
+	color: white;
+	background: crimson;
+}
+
+.input-file-text-wrapper {
+	width: 100%;
+	text-align: center;
+	padding: 0rem;
+	margin: 0rem;
+}
+
+/* Labeled items */
+.labeled-row { /* Wraps label and it's items */
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	width: 100%;
+}
+
+.labeled-row > * {
+	flex: 99999 1 10rem;
+}
+
+.labeled-col { /* Actual label. */
+	flex: 1 1 10rem;
+	margin-right: 0.5rem;
+	border-radius: 2rem;
+	border: 0.1rem solid darkred;
+	border-right: none;
+	border-bottom: none;
+	background: none;
+}
+
+.selectbox-indented { /* This makes tree-like look. Used in subsections list. */
+	border-left: 0.1rem solid darkred;
+}
+
+.selectbox-visible { /* Visible part of the box */
+	margin-right: 0.5rem;
+	border-radius: 0.2rem;
+	background: darkred;
+}
+
+.selectbox-radio { /* This one is used for radios, which are "subclasses" of select boxes */
+	border-radius: 50%;
+}
+
+.selectbox-caption { /* Caption of the select box */
+	display: flex;
+	align-items: center;
+	padding-top: 0.15rem;
+	padding-bottom: 0.15rem;
+	transition: var(--trans);
+}
+
+.selectbox-caption:hover > .selectbox-visible {
+	background: crimson;
+	box-shadow: 0rem 0rem 0rem 0.1rem darkred;
+}
+
+.selectbox:checked ~ .selectbox-caption > .selectbox-visible {
+	background: crimson;
+	border: 0.4rem solid darkred;
+}
+
+/* Error message */
+.error-message {
+	border: 0.1rem solid darkred;
+}
+
+/* Notification */
+.notification {
+	border: 0.1rem solid crimson;
+	border-top: none;
+	border-bottom: none;
+	border-radius: 2rem;
+	padding: 1rem;
+	background: none;
+}
+ /* Editor. Kinda same as window. */
+.editor-panel * .input-button, .editor-panel > .input-button {
+	border-left: 0.1rem solid darkred;
+}
+
+.editor-text {
+	border: none;
+	width: 100%;
+	border-radius: 1rem;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	min-height: 7rem;
+}
+
+.editor-name {
+	min-height: 0;
+	height: 2rem;
+	background: white;
+	padding-bottom: 0rem;
+	padding-top: 0rem;
+	border-bottom: 0.1rem solid darkred;
+	border-radius: 1.5rem;
+}
+
+/* User page settings */
+.profile-container {
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.profile-container > * {
+	margin: 5px;
+}
+
+.profile-left-block {
+	text-align: center;
+	flex: 1 1; /* Using flexes here and at right block to scale left block when stuff is being wrapped */
+}
+
+.profile-avatar {
+	border: 0.1rem solid darkred;
+	border-radius: 1rem;
+	box-shadow: none;
+	background-color: white;
+}
+
+.profile-right-block {
+	flex: 1000000 1 21rem;
+}
+
+/* Popup with removal confirmation. */
+.index-popup {
+	background: rgba(20, 0, 0, 0.5);
+}
+
+.popup-content {
+	background: white;
+	border: 0.2rem solid darkred;
+	border-radius: 2rem;
+	box-shadow: none;
+}
+
+/* Pages */
+.pages .page-label-container div { /* Label */
+	border: 0.1rem solid darkred;
+	border-radius: 1rem;
+	box-shadow: none;
+}

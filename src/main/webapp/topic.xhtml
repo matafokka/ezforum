@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:ui="http://java.sun.com/jsf/facelets" 
+		xmlns:h="http://java.sun.com/jsf/html" 
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:eztl="http://java.sun.com/jsf/composite/eztl">
+
+<ui:composition template="template.html">
+	<ui:param name="topic" value="#{topicBean.topic}" />
+	<ui:param name="currentUser" value="#{middleware.user}" />
+	<ui:param name="action" value="topic.xhtml?id=#{topicBean.topicId}" />
+	<ui:define name="title">#{topic.name}</ui:define>
+	<ui:define name="content">
+		<script src="js/textEditorInsert.js" />
+		<eztl:deletePopup customAction="{action}" />
+		<eztl:textEditor link="topic.xhtml?id=#{topic.id}" rendered="#{currentUser != null and topic.lockedBy == null}" />
+		<ui:param name="topicAuthor" value="#{topic.user}" />
+		
+		<!-- Topic window -->
+		<eztl:window
+			user="#{topicAuthor}"
+			title="#{topic.name}"
+			time="#{topic.date}"
+			>
+			<object>
+				<h:outputText value="#{topic.getFormattedText()}" escape="false"/>
+			</object>
+		</eztl:window>
+		
+		<!-- Posts -->
+		<ui:repeat value="#{topicBean.posts}" var="post">
+			<ui:param name="author" value="#{post.user}" />
+			<eztl:window
+			user="#{author}"
+			time="#{post.date}"
+			customid="post-#{post.id}"
+			>
+				<object>
+					<h:outputText value="#{post.getFormattedText()}" escape="false"/>
+				</object>
+				
+				<!-- Complaining stuff -->
+				<ui:fragment rendered="#{author.id != currentUser.id}">
+					<ui:param name="reviewRequest" value="#{post.getPostReviewByUserId(currentUser.id)}" />
+					
+					<!-- If complaint hasn't been sent -->
+					<eztl:labeledItem label="#{locale['misc.addComplaint.label']}" rendered="#{reviewRequest == null and currentUser != null}">
+						<form method="POST" class="button-row-set" action="#{action}">
+							<input type="text" class="input-text" name="reason" placeholder="#{locale['misc.addComplaint.placeholder']}"/>
+							<input type="hidden" name="postId" value="#{post.id}" />
+							<input type="submit" class="input-button" name="complain" value="#{locale['misc.addComplaint.button']}" />
+						</form>
+					</eztl:labeledItem>
+					
+					<!-- If complaint has been sent -->
+					<h:panelGroup layout="block" class="notification" rendered="#{reviewRequest != null}">
+						#{locale['topic.removeComplaint.notification']} "#{reviewRequest.getReason()}"
+						<form method="POST" action="#{action}">
+							<input type="submit" class="input-button input-red-button-color" name="remove-complaint" value="#{locale['misc.removeComplaintButton']}" />
+							<input type="hidden" name="requestId" value="#{reviewRequest.id}" />
+						</form>
+					</h:panelGroup>
+				</ui:fragment>
+				
+				<!-- Removing. Only for admins. -->
+				<eztl:removeButton
+				customAction="subsection.xhtml?id=#{subsection.id}"
+				sectionName="#{locale['removeButton.removePost']} &quot;#{author.name}&quot;"
+				sectionId="#{post.id}"
+				submitName="remove-post"
+				rendered="#{currentUser.rank == 0 or currentUser.rank lt author.rank}"
+				/>
+				
+				<!-- Editing. Only administrators and authors (if less than 10 hours passed since topic has been published) can edit posts. -->
+				<ui:fragment rendered="#{currentUser.rank le 2 or (currentUser.getId() == author.getId() and post.date.toInstant().plusSeconds(36000).isAfter(topicBean.getCurrentTime()))}">
+					<ui:param name="editId" value="edit_#{post.id}" />
+					<label for="#{editId}" class="input-button">#{locale['textEditor.toggleEditorButton']}</label>
+					<input type="checkbox" checked="checked" class="hidden" id="#{editId}" />
+					<div class="post-editor-container">
+						<eztl:textEditor
+						link="#{action}&amp;edit=true"
+						customId="#{post.id}"
+						customText="#{post.text}"
+						/>
+					</div>
+				</ui:fragment>
+				
+			</eztl:window>
+		</ui:repeat>
+		
+		<!-- Pages -->
+		<eztl:window title="#{locale['pages.windowTitle']}" rendered="#{topicBean.pagesCount > 1}">
+			<eztl:pages linkAddress="#{action}" sectionId="#{topic.id}" currentPage="#{topicBean.page}" pagesCount="#{topicBean.pagesCount}" />
+		</eztl:window>
+		
+	</ui:define>
+</ui:composition>
+</html>

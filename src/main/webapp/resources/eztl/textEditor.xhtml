@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+	<composite:attribute name="includeHeader" type="java.lang.Boolean" default="false" />
+	<composite:attribute name="link" required="true" />
+	<composite:attribute name="customId" />
+	<composite:attribute name="customHeader" />
+	<composite:attribute name="customText" />
+</composite:interface>
+
+<composite:implementation>
+	<ui:param name="editorId" value="text-editor-#{cc.attrs.customId}" />
+	<form method="POST" action="#{cc.attrs.link}" class="window-container">
+		<div class="window-title editor-panel">
+			<input type="button" class="input-button" value="&#127752;" onclick='insert("COLOR=\"#770000\"", "#{editorId}")' title="#{locale['textEditor.tags.color']}" />
+			<input type="button" class="input-button" value="B" onclick="insert('B', '#{editorId})'" style="font-weight: bold;" title="#{locale['textEditor.tags.b']}" />
+			<input type="button" class="input-button" value="I" onclick="insert('I', '#{editorId})'" style="font-style: italic;" title="#{locale['textEditor.tags.i']}" />
+			<input type="button" class="input-button" value="U" onclick="insert('U', '#{editorId})'" style="text-decoration: underline;" title="#{locale['textEditor.tags.u']}" />
+			<input type="button" class="input-button" value="S" onclick="insert('S', '#{editorId})'" style="text-decoration: line-through;" title="#{locale['textEditor.tags.s']}" />
+			<input type="button" class="input-button" value="[Ξ]" onclick="insert('CODE', '#{editorId}')" style="font-family: 'Consolas', consolas, lucida, monospace;" title="#{locale['textEditor.tags.code']}" />
+			<input type="button" class="input-button" value="[☼]" onclick="insert('IMG', '#{editorId}')" title="#{locale['textEditor.tags.img']}" />
+			<input type="button" class="input-button" value="⇆" onclick='insert("URL=\"link\"", "#{editorId})"' title="#{locale['textEditor.tags.url']}" />
+		</div>
+		<ui:fragment rendered="#{cc.attrs.includeHeader}">
+			<input type="text" name="topic-name" class="editor-text editor-name" placeholder="#{locale['textEditor.topicNamePlaceholder']}" value="#{cc.attrs.customHeader}" required="required" />
+		</ui:fragment>
+		<textarea name="post-text" id="#{editorId}" class="editor-text" placeholder="#{locale['textEditor.textPlaceholder']}" wrap="soft" required="required">#{cc.attrs.customText}</textarea>
+		<div class="editor-buttons">
+			<input type="submit" class="input-button" name="post-publish" value="#{locale['textEditor.button']}" />
+		</div>
+		<input type="hidden" name="editor-id" value="#{cc.attrs.customId}" />
+	</form>
+</composite:implementation>
+</html>

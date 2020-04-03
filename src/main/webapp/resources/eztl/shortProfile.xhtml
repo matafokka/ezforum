@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+	<composite:attribute name="user" type="ez.forum.entities.User" />
+	<composite:attribute name="customBanText" />
+</composite:interface>
+
+<composite:implementation>
+	<div class="button-row-set short-profile-container">
+		<ui:param name="user" value="#{cc.attrs.user}" />
+		<ui:param name="banReason" value="#{cc.attrs.customBanText.isEmpty() ? locale['shortProfile.bannedLabel'] : cc.attrs.customBanText}" />
+		<img class="window-avatar" src="#{user.getAvatarPath()}" />
+		<div class="short-profile-name rank-#{user.getRankStyle()}">
+			#{user.realName.isEmpty() ? user.name : user.realName}
+		</div>
+		<h:panelGroup layout="block" class="short-profile-ban-reason" rendered="#{!banReason.isEmpty()}">
+			#{banReason}
+		</h:panelGroup>
+		<a href="profile.xhtml?id=#{user.id}">
+			<input type="button" class="input-button" value="#{locale['shortProfile.viewButton']}" />
+		</a>
+	</div>
+</composite:implementation>
+</html>

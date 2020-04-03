@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:ui="http://java.sun.com/jsf/facelets" 
+		xmlns:h="http://java.sun.com/jsf/html" 
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:eztl="http://java.sun.com/jsf/composite/eztl">
+
+<ui:composition template="template.html">
+	<ui:define name="title">#{locale['login.pageTitle']}</ui:define>
+	<ui:param name="dataFlex" value="true" />
+	<ui:define name="content">
+		
+		<!-- Login window -->
+		<eztl:window title="#{locale['login.login.windowTitle']}">
+			
+			<!-- Errors -->
+			<h:panelGroup layout="block" class="error-message" rendered="#{loginBean.userNotFound}">
+				#{locale['login.login.errors.checkCredentials']}
+			</h:panelGroup>
+			<h:panelGroup layout="block" class="error-message" rendered="#{loginBean.userIsBanned}">
+				#{locale['login.login.errors.banned']} "#{loginBean.banReason}"
+			</h:panelGroup>
+			
+			<!-- Login form -->
+			<form method="POST" action="login.xhtml">
+				<eztl:labeledItem label="#{locale['login.login.emailLabel']}">
+					<input type="email" name="login-email" class="input-text" value="#{loginBean.loginEmail}" />
+				</eztl:labeledItem>
+				<eztl:labeledItem label="#{locale['login.login.passwordLabel']}">
+					<input type="password" name="login-password" class="input-text" value="#{loginBean.loginPassword}" />
+				</eztl:labeledItem>
+				<input type="submit" value="#{locale['login.login.button']}" class="input-button" name="login-button" />
+			</form>
+		</eztl:window>
+		
+		<!-- Register window -->
+		<eztl:window title="#{locale['login.register.windowTitle']}">
+			
+			<!-- Errors -->
+			<h:panelGroup layout="block" class="error-message" style="text-align: left;" rendered="#{!loginBean.registerErrors.isEmpty()}">
+				#{locale['login.register.errors.title']}
+				<ul>
+					<ui:repeat value="#{loginBean.registerErrors}" var="error">
+						<li>#{locale[error]}</li>
+					</ui:repeat>
+				</ul>
+			</h:panelGroup>
+			
+			<!-- Registration form -->
+			<div class="notification">#{locale['login.register.notification']}</div>
+			<form method="POST" action="login.xhtml">
+				<eztl:labeledItem label="#{locale['login.register.emailLabel']}">
+					<input type="email" name="register-email" class="input-text" value="#{loginBean.registerEmail}" />
+				</eztl:labeledItem>
+				<eztl:labeledItem label="#{locale['login.register.nicknameLabel']}">
+					<input type="text" name="register-nickname" class="input-text" value="#{loginBean.registerNickname}" />
+				</eztl:labeledItem>
+				<eztl:labeledItem label="#{locale['login.register.passwordLabel']}">
+					<input type="password" name="register-password" class="input-text" value="#{loginBean.registerPassword}" />
+				</eztl:labeledItem>
+				<eztl:labeledItem label="#{locale['login.register.repeatPasswordLabel']}:">
+					<input type="password" name="register-repeat-password" class="input-text" value="#{loginBean.registerRepeatPassword}" />
+				</eztl:labeledItem>
+				<input type="submit" value="#{locale['login.register.button']}" class="input-button" name="register-button" />
+			
+				<a href="confirm.xhtml">
+					<input type="button" class="input-button" value="#{locale['login.confirmationButton']}" />
+				</a>
+			</form>
+		</eztl:window>
+		
+	</ui:define>
+</ui:composition>
+</html>

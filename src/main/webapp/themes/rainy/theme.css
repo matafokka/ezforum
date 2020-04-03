@@ -1,0 +1,974 @@
+/* Vars */
+:root {
+	--green-light: #e4efdc;
+	--green: #9eb59a;
+	--green-dark: #5b8300;
+	--blue-light: #86b8cf;
+	--blue: #6491ad;
+	--blue-dark: #44728a;
+	--red-light: #ffcfcf;
+	--trans: all 0.1s linear;
+}
+
+/* Media queries */
+@media (max-resolution: 96dpi) {
+	html {
+		font-size: 10pt;
+	}
+}
+
+@media (max-resolution: 120dpi) {
+	html {
+		font-size: 12pt;
+	}
+}
+
+@media (min-resolution: 160dpi) {
+	html {
+		font-size: 16pt;
+	}
+}
+
+@media (min-resolution: 213dpi) {
+	html {
+		font-size: 18pt;
+	}
+}
+
+@media (min-resolution: 240dpi) {
+	html {
+		font-size: 32pt;
+	}
+}
+
+@media (min-resolution: 320dpi) {
+	html {
+		font-size: 38pt;
+	}
+}
+
+@media (min-resolution: 480dpi) {
+	html {
+		font-size: 42pt;
+	}
+}
+
+/* Basic elements style */
+
+html, body { height: 100%; }
+
+body {
+	font-family: helvetica, arial, sans-serif;
+	margin: 0rem;
+	padding: 0rem;
+	text-size-adjust: none;
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+}
+
+/* Background is fixed by default. It won't scroll when user scrolls page. */
+.body-background {
+	position: fixed; 
+	width: 100%;
+	height: 150%;
+	display: block;
+	z-index: -10;
+	background: linear-gradient(to bottom, var(--blue-light), var(--green-light) 50rem);
+	background-attachment: fixed;
+	background-size: cover;
+	-webkit-background-size: cover;
+	-webkit-background-attachment: fixed;
+	-moz-background-size: cover;
+}
+
+a {
+	text-decoration: none;
+	transition: var(--trans);
+}
+
+a:hover {
+	transition: var(--trans);
+}
+
+ul {
+	margin-bottom: 0rem;
+	margin-top: 0.2rem;
+	padding-left: 1rem;
+}
+
+input, select {
+	outline: none;
+}
+
+fieldset {
+	margin-bottom: 1rem;
+	border: 0.1rem solid var(--blue-dark);
+}
+
+legend {
+	color: var(--blue-dark);
+	border: 0.1rem solid var(--blue-dark);
+	padding: 0.15rem;
+}
+
+/* Object will contain only user-formatted text */
+object {
+	word-break: break-all;
+	width: 0rem;
+	height: 0rem;
+}
+
+/*
+Drop-down menu. Used only for themes.
+The box itself styled by input-text class.
+Here we're styling it's items.
+*/
+select > option {
+	background: var(--green-light);
+}
+
+/*
+Ranks.
+User nicknames and stars near them are displayed using this styles.
+*/
+
+.rank-creator {
+	font-family: "Consolas", consolas, lucida, monospace;
+	font-size: 1rem;
+	font-weight: bold;
+	color: goldenrod;
+}
+
+.rank-super-admin {
+	font-weight: bold;
+	color: violet;
+}
+
+.rank-admin {
+	font-weight: bold;
+	color: orchid;
+}
+
+.rank-moderator {
+	font-weight: bold;
+	color: var(--blue-dark);
+}
+
+.rank-user {
+	font-weight: bold;
+	color: green;
+}
+
+/* Images */
+
+.post-img {
+	width: 100%;
+	transition: var(--trans);
+}
+
+.post-img-checkbox { /* Image enlarges when user clicks on "checkbox" */
+	display: none;
+}
+
+.post-img-label { /* The whole image is label to the checkbox above */
+	display: none;
+	transition: var(--trans);
+}
+
+.post-img-checkbox:checked + .post-img-container > .post-img-label { /* Enlarged image */
+	position: fixed;
+	display: block;
+	top: 1rem;
+	left: 0;
+	right: 0;
+	width: fit-content;
+	margin: auto;
+	text-align: center;
+	color: white;
+	padding: 0.7rem;
+	border: 0.05rem solid white;
+	background: RGBA(0, 0, 0, 0.5);
+	transition: var(--trans);
+}
+
+.post-img-checkbox:checked + .post-img-container { /* Background of enlarged image */
+	position: fixed;
+	display: flex;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	max-width: 100%;
+	max-height: 100%;
+	margin: auto;
+	overflow: auto;
+	overscroll-behavior: contain;
+	background-color: black;
+	transition: var(--trans);
+}
+
+.post-img-checkbox:checked + .post-img-container > .post-img { /* Automatically scale image */
+	margin: auto;
+	width: auto;
+	transition: var(--trans);
+}
+
+.post-code { /* [CODE] tag */
+	max-height: 500px;
+	overflow: auto;
+	font-family: "Consolas", consolas, lucida, monospace;
+	white-space: pre-wrap;
+	border: 0.1rem solid var(--blue-dark);
+	color: darkblue;
+	padding: 5px;
+}
+
+.hidden, .post-code > br { /* Because we're preserving line breaks */
+	display: none;
+	width: 0rem;
+	height: 0rem;
+	visibility: none;
+}
+
+.container { /* Page container */
+	display: flex;
+	flex-flow: column;
+	min-height: 100%;
+}
+
+/* Header, where search in stuff is placed */
+.header {
+	position: absolute;
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	height: 3rem;
+	padding: 0rem;
+	background: var(--blue);
+	border-bottom: 0.1rem solid var(--blue-dark);
+	font-size: 1.5rem;
+	box-shadow: 0rem 0rem 1rem black;
+	align-items: center;
+	color: white;
+}
+
+.bar-icon { /* Left and right icons */
+	display: block;
+	width: 2rem;
+	height: 2rem;
+	padding: 0.5rem;
+	background-color: var(--green-light);
+	transition: var(--trans);
+}
+
+.bar-icon:hover {
+	background-color: var(--green);
+	transition: var(--trans);
+}
+
+.logo { /* Left icon */
+	border-right: 0.2rem solid var(--green-dark);
+	border-top-right-radius: 50%;
+}
+
+.user-icon { /* Right icon */
+	border-left: 0.2rem solid var(--green-dark);
+	border-top-left-radius: 50%;
+}
+
+.search { /* Search box */
+	display: flex;
+	align-items: center;
+	border: 0.1rem solid white;
+	background: rgba(255, 255, 255, 0.5);
+	color: black;
+	transition: var(--trans);
+	border-radius: 1rem;
+	padding: 0rem;
+	padding-left: 1rem;
+	width: 50%;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+.search:hover {
+	background: rgba(255, 255, 255, 0.8);
+	border: 0.1rem solid var(--blue-light);
+	transition: var(--trans);
+}
+
+.search-text { /* Actual search input box */
+	font: inherit;
+	background: none;
+	border: none;
+	min-width: 50px;
+	width: 100%;
+}
+
+.search:focus-within {
+	background: white;
+	border: 0.1rem solid var(--blue-dark);
+	transition: var(--trans);
+}
+
+.search-text::placeholder {
+	color: black;
+	transition: var(--trans);
+}
+
+.search-text:hover::placeholder {
+	color: grey;
+	transition: var(--trans);
+}
+
+.search-text:focus::placeholder {
+	color: white;
+	transition: var(--trans);
+}
+
+.search-button { /* Search button */
+	font: inherit;
+	width: 2rem;
+	background-image: url("../../img/search.svg");
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: rgba(255, 255, 255, 0.7);
+	border: none;
+	transition: var(--trans);
+}
+
+.search-button:hover {
+	background-color: lightgray;
+	transition: var(--trans);
+}
+
+.search:focus-within .search-button {
+	box-shadow: -0.15rem 0.1rem 0.3rem lightgrey;
+	transition: var(--trans);
+}
+
+/* Search page */
+.search-left-block {
+	flex: 10 1 auto;
+	height: fit-content;
+}
+
+.search-left-block > div {
+	height: 26.9rem; /* Handpicked value according to the right block. */
+	padding-left: 0.1rem;
+	overflow: auto;
+}
+
+.search-right-block {
+	height: 26.9rem; /* Handpicked value according to the right block. */
+	flex: 1 1 15rem;
+	display: flex;
+	flex-flow: column;
+	justify-content: space-between;
+}
+
+.content-mobile { /* Page container for mobile devices */
+	background-color: rgba(255, 255, 255, 0.0);
+	width: 100%;
+	padding-top: 5rem;
+	margin-left: -0.15rem;
+	margin-right: -0.15rem;
+	text-align: justify;
+	padding-bottom: 25px;
+}
+
+.content { /* Page container for PCs */
+	background-color: rgba(255, 255, 255, 0.0);
+	padding-top: 3.5rem;
+	text-align: justify;
+	min-width: 20rem;
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.content[data-flex='1'] { /* Used on index and login pages. Makes windows flow nicely. */
+	display: flex;
+	width: 100%;
+	flex-flow: row wrap;
+}
+
+.content[data-flex='1'] > * {
+	flex: 1 1 25rem; /* Also goes nicely with labeled-row class */
+	margin: 1rem;
+}
+
+.filler { /* Places footer down */
+	flex-grow: 1;
+}
+
+.footer { /* Footer */
+	width: 100%;
+	padding-top: 0.2rem;
+	padding-bottom: 0.2rem;
+	color: white;
+	text-align: center;
+	box-shadow: 0rem 0rem 1rem black;
+	background-color: var(--green);
+}
+
+/* Window */
+.window-container { /* The whole window container */
+	display: flex;
+	flex-flow: column;
+	box-shadow: 0rem 0.5rem 1rem rgb(0, 0, 0, 0.5);
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	background-color: white;
+	border: 0.1rem solid var(--blue-dark);
+}
+
+/*
+Title of the window. Title is divided into 3 parts:
+	1. Link to the user profile and avatar.
+	2. Window title.
+	3. Window time.
+*/
+.window-title { 
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: white;
+	background-color: var(--blue);
+	height: 1.5rem;
+	border-bottom: 0.1rem solid var(--blue-dark);
+}
+
+.window-profile-link { /* Contains link to the user profile and avatar */
+	display: flex;
+	color: white;
+	transition: var(--trans);
+}
+
+.window-profile-link:hover {
+	color: black;
+	transition: var(--trans);
+}
+
+.window-author { /* User nickname in */
+	display: inline-flex;
+	align-items: center;
+	margin-right: 0.5rem;
+}
+
+.window-avatar { /* User avatar */
+	overflow: visible;
+	height: 2.5rem;
+	width: 2.5rem;
+	object-fit: cover;
+	border-radius: 50%;
+	margin-right: 0.5rem;
+	margin-left: 0.5rem;
+	border: 0.1rem solid var(--blue-dark);
+	box-sizing: border-box;
+	background-color: var(--blue-dark);
+}
+
+.window-nickname { /* Contains actual nickname */
+	white-space: nowrap;
+}
+
+.window-star { /* Displays rank of the user */
+	text-shadow: 0rem 0.05rem 0rem white, 0.05rem 0rem 0rem white, 0.05rem 0.05rem 0rem white, 0rem -0.05rem 0rem white, -0.05rem 0rem 0rem white, -0.05rem -0.05rem 0rem white;
+	/*text-shadow: 0 0 0.5rem white, 0 0 0.5rem white, 0 0 0.5rem white, 0 0 0.5rem white;*/
+}
+
+.window-name { /* Title of the window */
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.window-time { /* Window time */
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.window-content { /* An actual content of the window */
+	flex: 1;
+	padding: 0.5rem;
+	border-top: none;
+}
+
+/* Lists. They're displayed only on index and admin pages */
+.list-item-container { /* Nicely wrap lists */
+	display: flex;
+	align-items: center;
+	border: 0.05rem solid black;
+	background-color: white;
+	padding: 0.2rem;
+	margin-top: -0.1rem;
+	transition: var(--trans);
+}
+
+.list-item-container:hover {
+	background-color: var(--green-light);
+	color: black;
+	transition: var(--trans);
+}
+
+.list-item-link { /* Link in items */
+	width: 100%;
+	color: var(--blue-dark);
+}
+
+/* Form elements */
+.input-text { /* Line edit boxes */
+	box-sizing: border-box;
+	display: table-cell;
+	width: 100%;
+	text-indent: 0.5rem;
+	font-size: 1rem;
+	padding: 0.15rem;
+	padding-left: 0.01rem;
+	border: 0.1rem solid var(--green-dark);
+	transition: var(--trans);
+}
+
+.input-text:hover {
+	box-shadow: 0rem 0rem 0rem 0.15rem var(--green-dark);
+	transition: var(--trans);
+}
+
+.input-text:focus {
+	border: 0.1rem solid var(--green-dark);
+	box-shadow: 0rem 0rem 0rem 0.07rem var(--green-dark);
+	transition: var(--trans);
+}
+
+.input-button { /* Buttons */
+	display: block;
+	width: 100%;
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+	background: var(--green-light);
+	padding-top: 0.2rem;
+	padding-bottom: 0.2rem;
+	color: black;
+	font-size: 1rem;
+	border: 0.1rem solid var(--green-dark);
+	border-radius: 0rem;
+	transition: var(--trans);
+}
+
+.input-button:hover {
+	background: var(--green-dark);
+	color: white;
+	transition: var(--trans);
+}
+
+.input-red-button-color { /* Red buttons */
+	background: var(--red-light);
+	border: 0.1rem solid crimson;
+}
+
+.input-red-button-color:hover {
+	background: crimson;
+}
+
+.input-red-button-cross { /* A small red buttons with cross on them */
+	margin: 0;
+	margin-right: 0.2rem;
+	padding-top: 0;
+	padding-bottom: 0;
+	line-height: 1rem;
+	width: auto;
+}
+
+.input-file-container { /* Don't touch this, it works. */
+	overflow: hidden;
+	position: relative;
+	display: flex;
+	align-items: center;
+	align-content: center;
+	text-align: center;
+	box-sizing: border-box; /* Removes increased width by borders */
+}
+
+/* Hack to remove input appearance */
+.input-file-container [type=file] { /* And this. */
+	/*cursor: inherit;
+	display: block;
+	font-size: 999px;*/
+	filter: alpha(opacity=0);
+	height: 100%;
+	width: 100%;
+	opacity: 0;
+	position: absolute;
+	left: 0;
+	/*text-align: right;*/
+	top: 0;
+}
+
+.input-file-text-wrapper {
+	width: 100%;
+	text-align: center;
+	padding: 0rem;
+	margin: 0rem;
+}
+
+/* Labeled items */
+.labeled-row { /* Wraps label and it's items */
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	width: 100%;
+}
+
+.labeled-row > * {
+	flex: 10 1 10rem;
+}
+
+.labeled-col { /* Actual label. */
+	flex: 1 1 10rem;
+	padding: 0.5rem;
+	margin-top: 0.3rem;
+	margin-bottom: 0.3rem;
+	text-align: right;
+	border-left: 0.1rem solid var(--green-dark);
+	background: linear-gradient(to right, var(--green-light), white 70%);
+}
+
+/* Radio buttons. Used in search page. */
+.selectbox-container { /* Container of the box and label */
+	display: flex;
+	align-items: center;
+}
+
+.selectbox-indented { /* This makes tree-like look. Used in subsections list. */
+	margin-left: 0.75rem;
+	padding-left: 1rem;
+	border-left: 0.1rem solid var(--green-dark);
+}
+
+.selectbox { /* An actual box */
+	display: none;
+	width: 0rem;
+	height: 0rem;
+	margin: 0rem;
+	padding: 0rem;
+}
+
+.selectbox-visible { /* Visible part of the box */
+	display: inline-block;
+	width: 1.5rem;
+	height: 1.5rem;
+	margin-right: 0.5rem;
+	background: var(--green);
+	box-sizing: border-box;
+	transition: var(--trans);
+}
+
+.selectbox-radio { /* This one is used for radios, which are "subclasses" of select boxes */
+	border-radius: 50%;
+}
+
+.selectbox-caption { /* Caption of the select box */
+	display: flex;
+	align-items: center;
+	padding-top: 0.15rem;
+	padding-bottom: 0.15rem;
+	transition: var(--trans);
+}
+
+.selectbox-caption:hover > .selectbox-visible {
+	background: var(--green-dark);
+	box-shadow: 0rem 0rem 0rem 0.1rem var(--green-dark);
+}
+
+.selectbox:checked ~ .selectbox-caption > .selectbox-visible {
+	background: var(--green-dark);
+	border: 0.4rem solid var(--green);
+}
+
+/* Error message */
+.error-message {
+	padding: 0.5rem;
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+	border: 0.1rem solid red;
+	background-color: var(--red-light);
+	color: black;
+	text-align: center;
+}
+
+/* Notification */
+.notification {
+	padding: 0.5rem;
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+	border: 0.1rem solid skyblue;
+	background-color: azure;
+	text-align: center;
+}
+ /* Editor. Kinda same as window. */
+.editor-panel {
+	display: flex;
+	justify-content: center;
+}
+
+.editor-panel * .input-button, .editor-panel > .input-button {
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
+	width: 2rem;
+	height: 1.5rem;
+	border-top: none;
+	border-bottom: none;
+	padding: 0rem;
+	text-align: center;
+	font-family: 'Times New Roman', Times, serif;
+}
+
+.editor-text {
+	box-sizing: border-box;
+	border: none;
+	margin: 0rem;
+	width: 100%;
+	height: 10rem;
+	font-size: 1rem;
+	resize: vertical;
+}
+
+.editor-name {
+	height: 2rem;
+	font-family: "Consolas", consolas, lucida, monospace;
+	text-align: center;
+	background: whitesmoke;
+	padding-bottom: 0rem;
+	padding-top: 0rem;
+	border-bottom: 0.15rem solid var(--blue-dark);
+}
+
+.editor-text:focus {
+	outline: none;
+}
+
+/* Input text goes here too */
+.editor-text::placeholder, .input-text::placeholder {
+	color: black;
+	transition: var(--trans);
+}
+
+.editor-text:hover::placeholder, .input-text:hover::placeholder {
+	color: lightgrey;
+	transition: var(--trans);
+}
+
+.editor-text:focus::placeholder, .input-text:focus::placeholder {
+	color: white;
+	transition: var(--trans);
+}
+
+.editor-name:focus::placeholder {
+	color: whitesmoke;
+	transition: var(--trans);
+}
+
+.editor-buttons {
+	display: flex;
+	justify-content: flex-end;
+	padding-bottom: 0rem;
+}
+
+.editor-buttons > .input-button {
+	width: auto;
+	margin: 0.5rem;
+}
+
+/* Editor toggle button */
+label.input-button {
+	text-align: center;
+}
+
+input[type="checkbox"]:checked + .post-editor-container {
+	display: none;
+}
+
+.post-editor-container > .window-container {
+	box-shadow: none;
+	margin-left: -0.3rem;
+	margin-right: -0.3rem;
+	border: 0.1rem solid var(--blue-dark)
+}
+
+/* User page settings */
+.profile-container {
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.profile-container > * {
+	margin: 5px;
+}
+
+.profile-left-block {
+	text-align: center;
+	flex: 1 1; /* Using flexes here and at right block to scale left block when stuff is being wrapped */
+}
+
+.profile-avatar {
+	height: 250px;
+	width: 250px;
+	object-fit: cover;
+	border: 0.1rem solid lightgrey;
+	box-shadow: 0rem 5px 15px lightgrey;
+	background-color: white;
+}
+
+.profile-right-block {
+	flex: 1000000 1 21rem;
+}
+
+/*
+Short profile.
+Appears in search and admin page
+*/
+.short-profile-container > .window-avatar {
+	width: 2.5rem;
+	max-width: 2.5rem;
+	padding-right: 0;
+}
+
+.short-profile-container * {
+	padding-right: 0.2rem;
+}
+
+.short-profile-name { /* Name of the user */
+	font-size: 1.2rem;
+	width: auto;
+	margin-right: auto;
+}
+
+.short-profile-ban-reason { /* Ban reason */
+	margin-right: auto;
+	text-align: center;
+	color: darkred;
+	font-weight: bold;
+}
+
+/* Index page */
+.index-subsection-name {
+	margin-top: 0.5rem;
+	margin-bottom: 0;
+}
+
+/* Popup with removal confirmation. */
+.index-popup {
+	position: fixed;
+	display: flex;
+	left: -1rem;
+	top: -1rem;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.popup-content {
+	margin-left: auto;
+	margin-right: auto;
+	padding: 2rem;
+	font-size: 1.5rem;
+	background: linear-gradient(to right, var(--red-light), var(--green-light));
+	box-shadow: 0px 1rem 1rem rgba(0, 0, 0, 0.5);
+	transition: var(--trans);
+}
+
+.popup-content > form {
+	display: flex;
+	flex-flow: row;
+	margin-top: 1rem;
+}
+
+.popup-content > form > input {
+	font-size: inherit;
+	margin: 1rem;
+}
+
+.hidden { /* Used for hiding stuff. Don't touch it. */
+	display: none;
+	width: 0rem;
+	height: 0rem;
+}
+
+/*
+A container for set of elements.
+
+You can see it in complaint forms, for example.
+It already looks nice, I suggest not to touch it.
+*/
+.button-row-set {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	width: 100%;
+}
+
+.button-row-set > * {
+	flex-grow: 1;
+	flex-basis: 0;
+	margin-left: 0.2rem; /* Distance between elements. */
+	margin-right: 0.2rem;
+}
+
+.button-row-set > :last-child { /* Last element is almost always stuff like removal buttons or buttons after line edit. */
+	flex-grow: 0;
+	flex-basis: auto;
+	width: auto;
+}
+
+/* Pages */
+
+/* Layout */
+.pages {
+	display: flex;
+}
+
+.pages > * {
+	margin-left: 0.2rem;
+	margin-right: 0.2rem;
+}
+
+.pages .input-button {
+	width: auto;
+}
+
+/* Label */
+.page-label-container {
+	position: relative;
+	max-width: 0;
+	max-height: 0;
+	margin: -0.05rem;
+}
+
+.pages .page-label-container div {
+	position: absolute;
+	z-index: -999;
+	right: 50%;
+	bottom: 0rem;
+	width: 7rem;
+	text-align: center;
+	opacity: 0;
+	background: white;
+	border: 0.1rem solid var(--blue-dark);
+	box-shadow: 0rem 0.1rem 0.2rem black;
+	transition: var(--trans);
+}
+
+.pages .input-text:focus + .page-label-container div {
+	opacity: 1;
+	bottom: 1rem;
+	padding: 0.5rem;
+	z-index: 999;
+	transition: var(--trans);
+}

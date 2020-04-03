@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:ui="http://java.sun.com/jsf/facelets" 
+		xmlns:h="http://java.sun.com/jsf/html" 
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:eztl="http://java.sun.com/jsf/composite/eztl">
+
+<ui:composition template="template.html">
+	<ui:param name="subsection" value="#{subsectionBean.subsection}" />
+	<ui:param name="currentUser" value="#{middleware.user}" />
+	<ui:param name="action" value="subsection.xhtml?id=#{subsection.id}" />
+	<ui:define name="title">#{subsection.name}</ui:define>
+	<ui:define name="content">
+		<script src="js/textEditorInsert.js" />
+		<eztl:deletePopup customAction="#{action}" />
+		<eztl:textEditor includeHeader="true" link="#{action}" rendered="#{currentUser != null}" />
+		
+		<ui:repeat value="#{subsectionBean.topics}" var="topic">
+			<ui:param name="author" value="#{topic.user}" />
+			<eztl:window
+			user="#{author}"
+			title="#{topic.name}"
+			time="#{topic.date}"
+			>
+				<!-- Display message if this topic is locked -->
+				<h:panelGroup layout="block" class="notification" rendered="#{topic.lockedBy != null}">
+					#{locale['subsection.locked.p1']}<br />
+					#{locale['subsection.locked.p2']}
+				</h:panelGroup>
+				
+				<object>
+					<h:outputText value="#{topic.getFormattedText()}" escape="false"/>
+				</object>
+				<ui:param name="reviewRequest" value="#{topic.getTopicReviewByUserId(currentUser.id)}" />
+				
+				<!-- Complaining stuff -->
+				<ui:fragment rendered="#{author.id != currentUser.id}">
+					
+					<!-- If complaint hasn't been sent -->
+					<eztl:labeledItem label="#{locale['misc.addComplaint.label']}" rendered="#{reviewRequest == null and currentUser != null}">
+						<form method="POST" class="button-row-set" action="#{action}">
+							<input type="text" class="input-text" name="reason" placeholder="#{locale['misc.addComplaint.placeholder']}"/>
+							<input type="hidden" name="topicId" value="#{topic.id}" />
+							<input type="submit" class="input-button" name="complain" value="#{locale['misc.addComplaint.button']}" />
+						</form>
+					</eztl:labeledItem>
+					
+					<!-- If complaint has been sent -->
+					<h:panelGroup layout="block" class="notification" rendered="#{reviewRequest != null}">
+						#{locale['subsection.removeComplaint.notification']} "#{reviewRequest.getReason()}"
+						<form method="POST" class="button-row-set" action="#{action}">
+							<input type="submit" class="input-button input-red-button-color" name="remove-complaint" value="#{locale['misc.removeComplaintButton']}" />
+							<input type="hidden" name="requestId" value="#{reviewRequest.id}" />
+						</form>
+					</h:panelGroup>
+				</ui:fragment>
+				
+				<!-- Admin stuff -->
+				<ui:param name="isCreator" value="#{currentUser.rank == 0}" />
+				<ui:param name="doRender" value="#{isCreator or currentUser.rank lt author.rank}" />
+				
+				<!-- Remove topic -->
+				<eztl:removeButton
+				customAction="#{action}"
+				sectionName="#{locale['removeButton.removeTopic']} &quot;#{topic.name}&quot;"
+				sectionId="#{topic.id}"
+				submitName="remove-topic"
+				rendered="#{doRender}"
+				/>
+				
+				<!-- Editing. Only administrators and authors (if less than 10 hours passed since topic has been published) can edit topics. -->
+				<ui:fragment rendered="#{topic.lockedBy == null and (currentUser.rank le 2 or (currentUser.getId() == author.getId() and topic.date.toInstant().plusSeconds(36000).isAfter(subsectionBean.getCurrentTime())))}">
+					<ui:param name="editId" value="edit_#{topic.id}" />
+					<label for="#{editId}" class="input-button">#{locale['textEditor.toggleEditorButton']}</label>
+					<input type="checkbox" checked="checked" class="hidden" id="#{editId}" />
+					<div class="post-editor-container">
+						<eztl:textEditor
+						link="#{action}&amp;edit=true"
+						includeHeader="true"
+						customId="#{topic.id}"
+						customHeader="#{topic.name}"
+						customText="#{topic.text}"
+						/>
+					</div>
+				</ui:fragment>
+				
+				<!-- Lock topic -->
+				<ui:fragment rendered="#{doRender and topic.lockedBy == null}">
+					<form method="POST" action="#{action}">
+						<input type="hidden" name="topic-id" value="#{topic.id}" />
+						<input type="submit" class="input-button" name="lock" value="#{locale['subsection.lockButton']}" />
+					</form>
+				</ui:fragment>
+				
+				<!-- Unlock topic -->
+				<ui:fragment rendered="#{doRender and topic.lockedBy != null and (isCreator or currentUser.rank lt topic.lockedBy.rank)}">
+					<form method="POST" action="#{action}">
+						<input type="hidden" name="topic-id" value="#{topic.id}" />
+						<input type="submit" class="input-button" name="unlock" value="#{locale['subsection.unlockButton']}" />
+					</form>
+				</ui:fragment>
+				
+				<!-- View topic button -->
+				<a href="topic.xhtml?id=#{topic.id}">
+					<input type="button" class="input-button" value="#{locale['subsection.viewButton']}" /> 
+				</a>
+			</eztl:window>
+		</ui:repeat>
+		
+		<!-- Pages -->
+		<eztl:window title="#{locale['pages.windowTitle']}" rendered="#{subsectionBean.pagesCount > 1}">
+			<eztl:pages linkAddress="#{action}" sectionId="#{subsection.id}" currentPage="#{subsectionBean.page}" pagesCount="#{subsectionBean.pagesCount}" />
+		</eztl:window>
+	</ui:define>
+</ui:composition>
+</html>

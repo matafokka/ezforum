@@ -1,0 +1,31 @@
+This is a master key (including this text). Remove this one and type a strong one, like this: H! Qy	m g ah  b!AEn x@$rVig,	#o!h  ^642gs,,	   	 	7disR #b,bd		XD
+
+
+
+!!! READ THE WHOLE THING !!!
+
+
+
+
+This file provides a master key used to encrypt users' emails and passwords.
+Using just this key, one can decrypt email but can't decrypt password.
+Unfortunately, we have no way of encrypting emails without this key, because ezforum needs to know them.
+
+!!! WARNING: Without the master key you won't be able to use your whole database !!!
+
+If you don't want to get the whole list of your users' emails leaked, hide this key from everyone, including your system administrator.
+To do so, you can:
+	1. Find a trustworthy system administrator that will NOT have access to the database.
+	2. Set such permissions to this file that will guarantee that:
+		a. ezforum will be able to read this file.
+		b. Your system administrators will not be able to read this file.
+	3. Hardcode the password. To do so:
+		a. Download ezforum source code.
+		b. Open file "/ezforum/src/main/java/ez/forum/util/AES.java" and follow instructions in it.
+		c. Compile and deploy the project.
+		d. Remove your master key from the source code.
+		f. You may remove this file.
+
+_______________________________
+Pro tip 1: use tabs and spaces. I doubt, someone will be able to reproduce them even if they have a picture of the key (without shown whitespaces).
+Pro tip 2: you can remove this text if you don't need it.

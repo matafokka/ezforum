@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+	<composite:attribute name="customAction" required="true" />
+	<composite:attribute name="sectionId" required="true" />
+	<composite:attribute name="sectionName" required="true" />
+	<composite:attribute name="isNormalButton" default="true" />
+	<composite:attribute name="submitName" default="remove-form" />
+</composite:interface>
+
+<composite:implementation>
+	<ui:param name="text" value="#{cc.attrs.isNormalButton ? locale['removeButton.removeText'] : '&#10006;'}" />
+	<ui:param name="style" value="#{cc.attrs.isNormalButton ? '' : 'input-red-button-cross'}" />
+	<ui:param name="id" value="remove-button-#{cc.attrs.submitName}-#{cc.attrs.sectionId}" />
+	
+	<input
+	id="#{id}"
+	type="button"
+	class="hidden"
+	title="Remove this section"
+	onclick="show_popup('#{cc.attrs.sectionId}', '#{cc.attrs.submitName}', '#{cc.attrs.sectionName}')"
+	value="#{text}"
+	/>
+	<script>
+		document.getElementById("#{id}").className = "input-button input-red-button-color #{style}";
+	</script>
+	<noscript>
+		<form method="POST" action="#{cc.attrs.customAction}">
+			<input
+			type="submit"
+			class="input-button input-red-button-color #{style}"
+			value="#{text}"
+			name="#{cc.attrs.submitName}"
+			/>
+			<input type="hidden" id="hidden-id" name="section-id" value="#{cc.attrs.sectionId}" />
+		</form>
+	</noscript>
+</composite:implementation>
+</html>

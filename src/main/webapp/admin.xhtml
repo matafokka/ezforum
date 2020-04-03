@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:ui="http://java.sun.com/jsf/facelets" 
+		xmlns:h="http://java.sun.com/jsf/html" 
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:eztl="http://java.sun.com/jsf/composite/eztl">
+
+<ui:composition template="template.html">
+	<ui:define name="title">#{locale['admin.pageTitle']}</ui:define>
+	<ui:define name="content">
+		
+		<!-- Menu -->
+		<eztl:window title="#{locale['admin.windowTitle']}">
+			<eztl:listItem
+				linkAddress="admin.xhtml?view=users_complaints"
+				linkText="#{locale['admin.menu.complaints']}"
+			/>
+			<eztl:listItem
+				linkAddress="admin.xhtml?view=topic_review"
+				linkText="#{locale['admin.menu.topicReviewRequests']}"
+			/>
+			<eztl:listItem
+				linkAddress="admin.xhtml?view=post_review"
+				linkText="#{locale['admin.menu.postReviewRequests']}"
+			/>
+			<eztl:listItem
+				linkAddress="admin.xhtml?view=banned_users"
+				linkText="#{locale['admin.menu.bannedUsers']}"
+			/>
+		</eztl:window>
+		<ui:param name="view" value="#{adminBean.view}"/>
+		<ui:param name="action" value="admin.xhtml?view=#{view}" />
+		
+		<!-- Complaints -->
+		<ui:repeat value="#{adminBean.complaints}" var="complaint" rendered="#{view eq 'users_complaints' or view eq ''}">
+			<eztl:window
+			user="#{complaint.sender}"
+			title="#{locale['admin.complaint.windowTitle']}"
+			>
+				<eztl:shortProfile
+				user="#{complaint.receiver}"
+				customBanText="#{complaint.reason}"
+				/>
+				<form method="POST" action="#{action}">
+					<input type="submit" name="decline-complaint" class="input-button" value="#{locale['admin.requests.declineButton']}" />
+					<input type="hidden" name="id" value="#{complaint.id}" />
+				</form>
+				<eztl:labeledItem label="#{locale['misc.ban.banUser']}">
+					<form method="POST" action="#{action}" class="button-row-set">
+						<input type="text" name="ban-reason" class="input-text" placeholder="#{locale['misc.ban.banReasonPlaceholder']}" required="required"/>
+						<input type="hidden" name="id" value="#{complaint.id}" />
+						<input type="submit" name="ban-user" class="input-button input-red-button-color" value="#{locale['misc.ban.banButton']}" />
+					</form>
+				</eztl:labeledItem>
+			</eztl:window>
+		</ui:repeat>
+		
+		<!-- Topic review requests -->
+		<ui:repeat value="#{adminBean.topicReviewRequests}" var="req" rendered="#{view eq 'topic_review'}">
+			<ui:param name="topic" value="#{req.topicBean}" />
+			<eztl:window
+			user="#{topic.user}"
+			title="#{topic.name}"
+			>
+				<eztl:labeledItem label="#{locale['admin.requests.sender']}">
+					<eztl:shortProfile user="#{req.user}" />
+				</eztl:labeledItem>
+				<eztl:labeledItem label="#{locale['admin.requests.reason']}"><div>#{req.reason}</div></eztl:labeledItem>
+				<object>
+					<h:outputText value="#{topic.getFormattedText()}" escape="false" />
+				</object>
+				<form method="POST" action="#{action}" class="button-row-set">
+					<a href="topic.xhtml?id=#{topic.id}">
+						<input type="button" class="input-button" value="#{locale['subsection.viewButton']}" />
+					</a>
+					<input type="hidden" name="id" value="#{req.id}" />
+					<input type="submit" name="decline-topic-review-request" class="input-button" value="#{locale['admin.requests.declineButton']}" />
+					<input type="submit" name="remove-topic-by-request" class="input-button input-red-button-color" value="#{locale['misc.remove.topic']}" />
+				</form>
+			</eztl:window>
+		</ui:repeat>
+		
+		<!-- Post review requests -->
+		<ui:repeat value="#{adminBean.postReviewRequests}" var="req" rendered="#{view eq 'post_review'}">
+			<ui:param name="post" value="#{req.postBean}" />
+			<eztl:window
+			user="#{post.user}"
+			>
+				<eztl:labeledItem label="#{locale['admin.requests.sender']}">
+					<eztl:shortProfile user="#{req.user}" />
+				</eztl:labeledItem>
+				<eztl:labeledItem label="#{locale['admin.requests.reason']}">#{req.reason}</eztl:labeledItem>
+				<object>
+					<h:outputText value="#{post.getFormattedText()}" escape="false" />
+				</object>
+				<form method="POST" action="#{action}" class="button-row-set">
+					<a href="topic.xhtml?id=#{post.topicBean.id}#post-#{post.id}">
+						<input type="button" name="decline-topic-review-request" class="input-button" value="#{locale['admin.requests.viewPostButton']}" />
+					</a>
+					<input type="hidden" name="id" value="#{req.id}" />
+					<input type="submit" name="decline-post-review-request" class="input-button" value="#{locale['admin.requests.declineButton']}" />
+					<input type="submit" name="remove-post-by-request" class="input-button input-red-button-color" value="#{locale['misc.remove.post']}" />
+				</form>
+			</eztl:window>
+		</ui:repeat>
+		
+		<!-- Banned users -->
+		<ui:repeat value="#{adminBean.bannedUsers}" var="user" rendered="#{view eq 'banned_users'}">
+			<eztl:window
+			user="#{user}"
+			>
+				<eztl:shortProfile user="#{user}" />
+				<form method="POST" action="#{action}" class="button-row-set">
+					<input type="submit" name="unban-user" class="input-button" value="#{locale['misc.ban.unbanButton']}" />
+					<input type="hidden" name="id" value="#{user.id}" />
+				</form>
+			</eztl:window>
+		</ui:repeat>
+	</ui:define>
+</ui:composition>
+</html>

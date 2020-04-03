@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:eztl="http://java.sun.com/jsf/composite/eztl">
+
+<composite:interface>
+	<composite:attribute name="linkAddress" required="true" />
+	<composite:attribute name="sectionId" required="true" />
+	<composite:attribute name="currentPage" required="true" />
+	<composite:attribute name="pagesCount" required="true" />
+</composite:interface>
+
+<composite:implementation>
+	<ui:param name="action" value="#{cc.attrs.linkAddress}&amp;page=" />
+	
+	<div class="pages">
+		<ui:fragment rendered="#{cc.attrs.currentPage != 1}">
+			<a href="#{action}1" title="#{locale['pages.firstPageTooltip']}">
+				<input type="button" class="input-button" value="&lt;&lt;" />
+			</a>
+		
+			<a href="#{action}#{cc.attrs.currentPage - 1}" title="#{locale['pages.previousPageTooltip']}">
+				<input type="button" class="input-button" value="&lt;" />
+			</a>
+		</ui:fragment>
+		
+		<form method="GET" action="#{cc.attrs.linkAddress}" class="button-row-set">
+			<input type="number"
+			min="1"
+			max="#{cc.attrs.pagesCount}"
+			class="input-text"
+			id="page-number"
+			name="page"
+			value="#{cc.attrs.currentPage}"
+			placeholder="#{locale['pages.input.placeholder']}"
+			autocomplete="off"
+			/>
+			<div class="page-label-container">
+				<div>#{locale['pages.input.pageCount']} #{cc.attrs.pagesCount}</div>
+			</div>
+			<input type="hidden" name="id" value="#{cc.attrs.sectionId}" />
+			<input type="submit" class="input-button" value="#{locale['pages.input.button']}" />
+		</form>
+		
+		<ui:fragment rendered="#{cc.attrs.currentPage != cc.attrs.pagesCount}">
+			<a href="#{action}#{cc.attrs.currentPage + 1}" title="#{locale['pages.nextPageTooltip']}">
+				<input type="button" class="input-button" value="&gt;" />
+			</a>
+		
+			<a href="#{action}#{cc.attrs.pagesCount}" title="#{locale['pages.lastPageTooltip']}">
+				<input type="button" class="input-button" value="&gt;&gt;" />
+			</a>
+		</ui:fragment>
+	</div>
+</composite:implementation>
+</html>

@@ -1,0 +1,338 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:ui="http://java.sun.com/jsf/facelets" 
+		xmlns:h="http://java.sun.com/jsf/html" 
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:eztl="http://java.sun.com/jsf/composite/eztl">
+
+<ui:composition template="template.html">
+	<ui:define name="title">#{locale['search.title']}</ui:define>
+	<ui:define name="content">
+		<ui:param name="action" value="#{searchBean.action}" />
+		<ui:param name="checkedBoxes" value="#{searchBean.checkedBoxes}" />
+		
+		<!-- This script toggles "Include in search" items -->
+		<script>
+			//<![CDATA[
+			function display_items(hide_topic_name, hide_content, hide_author_nickname, hide_nickname, hide_real_name) {
+				hideshow(document.getElementById("div-1"), hide_topic_name);
+				hideshow(document.getElementById("div-2"), hide_content);
+				hideshow(document.getElementById("div-3"), hide_author_nickname);
+				hideshow(document.getElementById("div-4"), hide_nickname);
+				hideshow(document.getElementById("div-5"), hide_real_name);
+			}
+			
+			function hideshow(item, hide) {
+				if (hide) {
+					item.className = "hidden";
+				} else {
+					item.className = "selectbox-container";
+				}
+			}
+			
+			function sections_onclick(e) {
+				var current = e.parentElement;
+				while(current = current.nextElementSibling) {
+					if (!current.classList.contains("selectbox-indented")) {
+						break;
+					}
+					if (e.checked) {
+						current.firstElementChild.checked = true;
+					}
+					else {
+						current.firstElementChild.checked = false;
+					}
+				}
+			}
+			//]]>
+		</script>
+		<eztl:window title="#{locale['search.title']}">
+			<form method="GET" action="search.xhtml" class="search-form">
+				
+				<!-- Query input -->
+				<eztl:labeledItem label="#{locale['search.queryLabel']}">
+					<input type="text" class="input-text" name="search-query" value="#{searchBean.queryText}" />
+				</eztl:labeledItem>
+				
+				<!-- Container wraps items into two columns -->
+				<div class="profile-container">
+				
+					<!-- Sections tree -->
+					<fieldset class="search-left-block">
+						<legend>#{locale['search.specificSectionsLabel']}</legend>
+						<div>
+							<ui:param name="checkedSections" value="#{searchBean.checkedSections}" />
+							<ui:param name="checkedSubsections" value="#{searchBean.checkedSubsections}" />
+							
+							<!-- Using sec and subsec instead of section and subsection because of a bug in JSF -->
+							<!-- Using these names will lead to strange errors -->
+							
+							<!-- Sections -->
+							<ui:repeat value="#{indexBean.sections}" var="sec">
+								
+								<div class="selectbox-container" id="div-section-#{sec.id}">
+									<input type="checkbox"
+									class="selectbox"
+									name="search-in-sections-section-#{sec.id}"
+									value="#{sec.name}"
+									id="section-#{sec.id}"
+									onclick="sections_onclick(this)"
+									checked="#{checkedSections.containsKey(sec.name) ? 'checked' : '' }"
+									/>
+									<label for="section-#{sec.id}" class="selectbox-caption">
+										<div class="selectbox-visible" />
+										#{sec.name}
+									</label>
+								</div>
+								
+								<!-- Subsections -->
+								<ui:repeat value="#{sec.getSubsections()}" var="subsec" >
+									<div class="selectbox-container selectbox-indented" id="div-sub-#{subsec.id}">
+										<input type="checkbox"
+										class="selectbox"
+										name="search-in-subs-sub-#{subsec.id}"
+										value="#{subsec.name}"
+										id="sub-#{subsec.id}"
+										checked="#{checkedSubsections.containsKey(subsec.name) ? 'checked' : '' }"
+										/>
+										<label for="sub-#{subsec.id}" class="selectbox-caption">
+											<div class="selectbox-visible" />
+											#{subsec.name}
+										</label>
+									</div>
+								</ui:repeat>
+								
+							</ui:repeat>
+						</div>
+					</fieldset>
+					
+					<!-- Search parameters -->
+					<div class="search-right-block">
+					
+						<!-- Query parameters -->
+						<fieldset>
+							<legend>#{locale['search.parameters.label']}</legend>
+							
+							<!-- Match case -->
+							<div class="selectbox-container">
+								<input type="checkbox"
+								class="selectbox"
+								name="match-case"
+								id="param-match-case"
+								checked="#{checkedBoxes.get('match-case')}"
+								/>
+								<label for="param-match-case" class="selectbox-caption">
+									<div class="selectbox-visible" />
+									#{locale['search.parameters.matchCase']}
+								</label>
+							</div>
+							
+							<!-- Match whole query -->
+							<div class="selectbox-container">
+								<input type="checkbox"
+								class="selectbox"
+								name="match-whole-query"
+								id="param-whole-query"
+								checked="#{checkedBoxes.get('match-whole-query')}"
+								/>
+								<label for="param-whole-query" class="selectbox-caption">
+									<div class="selectbox-visible" />
+									#{locale['search.parameters.matchWholeQuery']}
+								</label>
+							</div>
+							
+						</fieldset>
+					
+						<!-- Where to search -->
+						<fieldset id="search-in">
+							<legend>#{locale['search.searchIn.label']}</legend>
+							
+							<!-- Topics and posts -->
+							<div class="selectbox-container">
+								<input type="radio"
+								class="selectbox"
+								name="search-in"
+								value="topics-and-posts"
+								id="radio-1"
+								onclick="display_items(false, false, false, true, true)"
+								checked="#{action == 0 ? 'checked' : '' }"
+								/>
+								<label for="radio-1" class="selectbox-caption">
+									<div class="selectbox-visible selectbox-radio" />
+									#{locale['search.searchIn.topicsAndPosts']}
+								</label>
+							</div>
+							
+							<!-- Topics -->
+							<div class="selectbox-container">
+								<input type="radio"
+								class="selectbox"
+								name="search-in"
+								value="topics"
+								onclick="display_items(false, false, false, true, true)"
+								id="radio-2"
+								checked="#{action == 1 ? 'checked' : '' }"
+								/>
+								<label for="radio-2" class="selectbox-caption">
+									<div class="selectbox-visible selectbox-radio" />
+									#{locale['search.searchIn.topics']}
+								</label>
+							</div>
+							
+							<!-- Posts -->
+							<div class="selectbox-container">
+								<input type="radio"
+								class="selectbox"
+								name="search-in"
+								value="posts"
+								onclick="display_items(true, false, false, true, true)"
+								id="radio-3"
+								checked="#{action == 2 ? 'checked' : '' }"
+								/>
+								<label for="radio-3" class="selectbox-caption">
+									<div class="selectbox-visible selectbox-radio" />
+									#{locale['search.searchIn.posts']}
+								</label>
+							</div>
+							
+							<!-- Users -->
+							<div class="selectbox-container">
+								<input type="radio"
+								class="selectbox"
+								name="search-in"
+								value="users"
+								onclick="display_items(true, true, true, false, false)"
+								id="radio-4"
+								checked="#{action == 3 ? 'checked' : '' }"
+								/>
+								<label for="radio-4" class="selectbox-caption">
+									<div class="selectbox-visible selectbox-radio" />
+									#{locale['search.searchIn.users']}
+								</label>
+							</div>
+							</fieldset>
+							
+							<!-- What to include in search -->
+							<fieldset>
+								<legend>#{locale['search.include.label']}</legend>
+								<div class="selectbox-container" id="div-1">
+									<input type="checkbox"
+									class="selectbox"
+									name="include-topic-name"
+									id="1"
+									checked="#{checkedBoxes.get('include-topic-name')}"
+									/>
+									<label for="1" class="selectbox-caption">
+										<div class="selectbox-visible" />
+										#{locale['search.include.topicName']}
+									</label>
+								</div>
+								<div class="selectbox-container" id="div-2">
+									<input type="checkbox"
+									class="selectbox"
+									name="include-content"
+									id="2"
+									checked="#{checkedBoxes.get('include-content')}"
+									/>
+									<label for="2" class="selectbox-caption">
+										<div class="selectbox-visible" />
+										#{locale['search.include.content']}
+									</label>
+								</div>
+								<div class="selectbox-container" id="div-3">
+									<input type="checkbox"
+									class="selectbox"
+									name="include-author-nickname"
+									id="3"
+									checked="#{checkedBoxes.get('include-author-nickname')}"
+									/>
+									<label for="3" class="selectbox-caption">
+										<div class="selectbox-visible" />
+										#{locale['search.include.authorNickname']}
+									</label>
+								</div>
+								<div class="selectbox-container" id="div-4">
+									<input type="checkbox"
+									class="selectbox"
+									name="include-user-nickname"
+									checked="#{checkedBoxes.get('include-user-nickname')}"
+									id="4"
+									/>
+									<label for="4" class="selectbox-caption">
+										<div class="selectbox-visible" />
+										#{locale['search.include.userNickname']}
+									</label>
+								</div>
+								<div class="selectbox-container" id="div-5">
+									<input type="checkbox"
+									class="selectbox"
+									name="include-user-real-name"
+									id="5"
+									checked="#{checkedBoxes.get('include-user-real-name')}"
+									/>
+									<label for="5" class="selectbox-caption">
+										<div class="selectbox-visible" />
+										#{locale['search.include.userRealName']}
+									</label>
+								</div>
+							</fieldset>
+						<input type="submit" class="input-button" value="#{locale['search.searchButton']}" name="search-button" />
+					</div>
+				</div>
+			</form>
+		</eztl:window>
+		<ui:repeat var="topic" value="#{searchBean.topics}" rendered="#{action == 0 or action == 1}">
+			<ui:param name="author" value="#{topic.user}" />
+			<eztl:window
+			user="#{author}"
+			title="#{topic.name}"
+			time="#{topic.date}"
+			>
+				<object>
+					<h:outputText value="#{topic.getFormattedText()}" escape="false"/>
+				</object>
+				<a href="topic.xhtml?id=#{topic.id}&amp;page=1}">
+					<input type="button" class="input-button" value="#{locale['subsection.viewButton']}" />
+				</a>
+			</eztl:window>
+		</ui:repeat>
+		<ui:repeat var="post" value="#{searchBean.posts}" rendered="#{action == 0 or action == 2}">
+			<ui:param name="author" value="#{post.user}" />
+			<eztl:window
+			user="#{author}"
+			time="#{post.date}"
+			>
+				<object>
+					<h:outputText value="#{post.getFormattedText()}" escape="false"/>
+				</object>
+				<a href="topic.xhtml?id=#{post.topicBean.id}&amp;page=#{post.getPageNumber()}#post-#{post.id}">
+					<input type="button" class="input-button" value="#{locale['search.jumpToPostButton']}" />
+				</a>
+			</eztl:window>
+		</ui:repeat>
+		<ui:repeat var="user" value="#{searchBean.users}" rendered="#{action == 3}">
+			<eztl:window
+			title="#{user.name}"
+			>
+				<eztl:shortProfile user="#{user}" />
+			</eztl:window>
+		</ui:repeat>
+		<h:outputScript>
+			//<![CDATA[
+			for (var i = 1; i <= 4; i++) {
+				var radio = document.getElementById("radio-" + i);
+				if (radio.checked) {
+					radio.click();
+					break;
+				}
+			}
+			//]]>
+		</h:outputScript>
+		
+		<!-- Pages -->
+		<eztl:window title="#{locale['pages.windowTitle']}" rendered="#{searchBean.pagesCount > 1}">
+			<eztl:pages linkAddress="#{searchBean.url}" sectionId="" currentPage="#{searchBean.page}" pagesCount="#{searchBean.pagesCount}" />
+		</eztl:window>
+		
+	</ui:define>
+</ui:composition>
+</html>

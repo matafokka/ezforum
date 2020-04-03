@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+		>
+<f:view locale="#{middleware.getLocale()}" />
+<head>
+	<link href="themes/rainy/theme.css" rel="stylesheet"/>
+	<link href="themes/#{middleware.theme}/theme.css" rel="stylesheet"/>
+	<link rel="shortcut icon" href="img/logo.png" />
+	<title>
+		EZ Forum - <ui:insert name="title">Page</ui:insert>
+	</title>
+</head>
+<body>
+	<div class="body-background"></div>
+	<div class="container">
+		<!-- Header -->
+		<header class="header">
+			
+			<!-- To index page link -->
+			<a href="index.xhtml" class="bar-icon logo" title="#{locale['template.icons.toIndex']}">
+				<img src="img/home.svg" />
+			</a>
+			
+			<!-- Search form -->
+			<form method="GET" action="search.xhtml" class="search">
+				<input type="text" class="search-text" required="required" placeholder="#{locale['template.search.searchHere']}" name="search-query" />
+				<input type="submit" class="search-button" value="" />
+			</form>
+			
+			<!-- Link to login.xhtml or me.xhtml -->
+			<a href="#{middleware.userLink}" class="bar-icon user-icon" title="#{locale[middleware.userLinkText]}">
+				<img src="img/user.svg" />
+			</a>
+		</header>
+		
+	<!-- Content -->
+	<h:panelGroup layout="block" class="content#{middleware.isMobile == true ? '-mobile' : ''}" p:data-flex="#{dataFlex == true ? '1' : '0'}">
+		<ui:insert name="content">
+			<div class="notification">#{locale["template.notification.nothingIsHere"]}</div>
+		</ui:insert>
+	</h:panelGroup>
+	
+	<!-- Filler -->
+	<div class="filler"></div>
+	
+	<!-- Footer -->
+	<footer class="footer">
+		#{locale["template.footer.basedOn"]} EZ Forum<br />
+		#{locale["template.footer.madeBy"]} matafokka (c) #{middleware.currentYear}
+	</footer>
+	</div>
+</body>
+</html>

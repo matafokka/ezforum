@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:ui="http://java.sun.com/jsf/facelets" 
+		xmlns:h="http://java.sun.com/jsf/html" 
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:eztl="http://java.sun.com/jsf/composite/eztl">
+
+<ui:composition template="template.html">
+	<ui:define name="title">#{locale['confirm.pageTitle']}</ui:define>
+	<ui:define name="content">
+		<ui:param name="errorCode" value="#{confirmBean.errorCode}" />
+	
+		<!-- Confirmation window -->
+		<eztl:window title="#{locale['confirm.windowTitle']}" rendered="#{middleware.user == null}">
+		
+			<!-- Messages -->
+			
+			<h:panelGroup layout="block" class="notification error-message" rendered="#{errorCode == 0}">
+				#{locale['confirm.notification.p1']}<br />
+				#{locale['confirm.notification.p2']}<br />
+				#{locale['confirm.notification.p3']}
+			</h:panelGroup>
+			
+			<h:panelGroup layout="block" class="notification error-message" rendered="#{errorCode == 1}">
+				#{locale['confirm.errors.emailNotFound']}
+			</h:panelGroup>
+			
+			<h:panelGroup layout="block" class="notification error-message" rendered="#{errorCode == 2}">
+				#{locale['confirm.errors.cantSendMessage']}
+			</h:panelGroup>
+			
+			<h:panelGroup layout="block" class="notification" rendered="#{errorCode == -2}">
+				#{locale['confirm.messages.codeResent.p1']}<br />
+				#{locale['confirm.messages.codeResent.p2']}<br />
+			</h:panelGroup>
+			
+			<!-- Description -->
+			<div>
+			#{locale['confirm.messages.explanation']}
+			</div>
+			
+			<!-- Submit code form -->
+			<eztl:labeledItem label="#{locale['confirm.submitCode.label']}">
+				<form method="POST" action="confirm.xhtml" class="button-row-set">
+					<input type="text" name="code" class="input-text" placeholder="#{locale['confirm.submitCode.placeholder']}" required="required" />
+					<input type="submit" name="submit-code" value="#{locale['confirm.submitCode.button']}" class="input-button" />
+				</form>
+			</eztl:labeledItem>
+			
+			<!-- Resend code form -->
+			<eztl:labeledItem label="#{locale['confirm.resendCode.label']}">
+				<form method="POST" action="confirm.xhtml" class="button-row-set">
+					<input type="text" name="email" class="input-text" placeholder="#{locale['confirm.resendCode.placeholder']}" value="#{confirmBean.email}" required="required" />
+					<input type="submit" name="submit-email" value="#{locale['confirm.resendCode.button']}" class="input-button" />
+				</form>
+			</eztl:labeledItem>
+		</eztl:window>
+		
+		<!-- Success window -->
+		<eztl:window title="#{locale['confirm.success.windowTitle']}" rendered="#{errorCode == -3}">
+			<div>#{locale['confirm.messages.emailConfirmed']}</div>
+			<a href="me.xhtml">
+				<input type="button" class="input-button" value="#{locale['confirm.success.button']}" />
+			</a>
+		</eztl:window>
+		
+	</ui:define>
+</ui:composition>
+</html>
