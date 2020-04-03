@@ -13,17 +13,17 @@ Ezforum has been tested on Wildfly 18 and PostgreSQL 11.1. It should work with o
 Key features of ezforum:
 1. Lightweight frontend: the whole thing is made only with HTML and CSS. JavaScript is used only in two parts, and sripts are really small and fast. Additionaly, ezforum can work even without JS, though, BBCodes buttons won't work.
 1. Themes support.
-  1. Themes are located in `themes` directory inside deployment's root.
-  1. All themes are based on "rainy" theme.
-  1. Copy it, open, throw away unneeded stuff, replace stuff you want. You know, what to do.
+   1. Themes are located in `themes` directory inside deployment's root.
+   1. All themes are based on "rainy" theme.
+   1. Copy it, open, throw away unneeded stuff, replace stuff you want. You know, what to do.
 1. Custom locales (translations) support.
-  1. Locales are located in `WEB-INF/classes/locales` inside deployment's root.
-  1. Locales are basically Java EE properties files but with UTF-8 support.
-  1. Each official locale contains tutorial on translation.
+   1. Locales are located in `WEB-INF/classes/locales` inside deployment's root.
+   1. Locales are basically Java EE properties files but with UTF-8 support.
+   1. Each official locale contains tutorial on translation.
 1. Security.
-  1. XSS, SQL Injections and bad URLs won't work here.
-  1. All sensitive data is encryped, however, there are some pitfalls (see "AES Configuration").
-  1. However, ezforum DOES NOT provide any protection against DDOS or spam attacks. Use firewall, DDOS mitigation software or CDNs.
+   1. XSS, SQL Injections and bad URLs won't work here.
+   1. All sensitive data is encryped, however, there are some pitfalls (see "AES Configuration").
+   1. However, ezforum DOES NOT provide any protection against DDOS or spam attacks. Use firewall, DDOS mitigation software or CDNs.
 1. Scalability that comes with Java EE servers.
 1. Famous Java backwards compatibility: ezforum needs JRE 8 or higher.
 
@@ -60,9 +60,9 @@ This part describes general deployment process. For exact instructions, read the
 ## Database
 1. Download and install your favourite RDBMS server. But, as being said above, it is recommended to use PostgreSQL.
 1. Create a database and a schema:
-  1. Open `ezforum.sql` script at project's root directory.
-  1. Replace all occurences of database, schema and user names (`postgres`, `ezforum` and `user` respectively) with yours.
-  1. Run it on your server.
+   1. Open `ezforum.sql` script at project's root directory.
+   1. Replace all occurences of database, schema and user names (`postgres`, `ezforum` and `user` respectively) with yours.
+   1. Run it on your server.
   
 ## Java EE Server
 1. Download and install your favourite Java EE server. But, as being said above, it is recommended to use WildFly.
