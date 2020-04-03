@@ -94,4 +94,7 @@ Ezforum encrypts sensitive data using AES 256. You need to enter your master key
 I recommend use Exploded WAR packaging, so it will be easy to install custom locales and themes.
 1. `cd` to the project's root.
 1. Run `mvn compile war:exploded`.
-1. Deploy compiled project.
+1. Deploy compiled project and run it.
+1. Create an account for creator:
+   1. Register a new user using ezforum.
+   1. Change it's rank to 0 in the database.
