@@ -2,7 +2,6 @@ package ez.forum.util;
 
 /**
  * Use it to convert BBCode to HTML.
- * It's a bit expensive to create this class, so share it between your stuff.
  */
 public class BBCodeConverter {
 	private static String[][] complexTags = new String[4][6];
