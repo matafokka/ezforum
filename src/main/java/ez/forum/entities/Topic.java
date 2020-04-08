@@ -4,7 +4,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 import ez.forum.util.BBCodeConverter;
 import ez.forum.util.PagesHelper;
-import ez.forum.util.SHARED_OBJECTS;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -52,9 +51,6 @@ public class Topic implements Serializable {
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="locked_by")
 	private User lockedBy;
-	
-	@Transient
-	private BBCodeConverter conv = SHARED_OBJECTS.bbConverter;
 
 	public Topic() {
 	}
@@ -91,7 +87,7 @@ public class Topic implements Serializable {
 	 * Returns getText() with escaped HTML entities and formatted BBCode.
 	 */
 	public String getFormattedText() {
-		return conv.toHtml(this.text);
+		return BBCodeConverter.toHtml(this.text);
 	}
 
 	public void setText(String text) {

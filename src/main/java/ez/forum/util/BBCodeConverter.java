@@ -9,7 +9,7 @@ public class BBCodeConverter {
 	private static String[][] simpleTagsAndHtmlEntities = new String[14][2];
 	private static String[][] urlEntities = new String[5][2];
 	
-	public BBCodeConverter() {
+	static {
 		complexTags[0] = new String[] {
 			"[URL=\"http://", "\"]", "[/URL]",
 			"<a href=\"http://", "\">", "</a>"};
@@ -53,7 +53,7 @@ public class BBCodeConverter {
 	 * @return
 	 * Escaped string containing HTML
 	 */
-	public String toHtml(String source) {
+	public static String toHtml(String source) {
 		StringBuffer html = new StringBuffer(source);
 		
 		int indexOfCurrentTag = -1;

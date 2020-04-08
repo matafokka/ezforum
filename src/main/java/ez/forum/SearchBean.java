@@ -16,7 +16,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpServletRequest;
 
 import ez.forum.entities.Post;
 import ez.forum.entities.Topic;
@@ -51,7 +50,6 @@ public class SearchBean {
 	 */
 	private int action = 0;
 	
-	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void init() {
 		ExternalContext context = FacesContext.

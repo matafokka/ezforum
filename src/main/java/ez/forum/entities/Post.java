@@ -4,7 +4,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 import ez.forum.util.BBCodeConverter;
 import ez.forum.util.PagesHelper;
-import ez.forum.util.SHARED_OBJECTS;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -41,9 +40,6 @@ public class Post implements Serializable {
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="author")
 	private User user;
-	
-	@Transient
-	private BBCodeConverter conv = SHARED_OBJECTS.bbConverter;
 
 	public Post() {
 	}
@@ -72,7 +68,7 @@ public class Post implements Serializable {
 	 * Returns getText() with escaped HTML entities and formatted BBCode.
 	 */
 	public String getFormattedText() {
-		return conv.toHtml(this.text);
+		return BBCodeConverter.toHtml(this.text);
 	}
 
 	public void setText(String text) {
