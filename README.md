@@ -57,6 +57,12 @@ Additionally, following rules are applied:
 # Installation
 This part describes general deployment process. For exact instructions, read the docs for your RDBMS and Java EE server.
 
+## Building the project
+1. If you're planning to run ezforum not on WildFly and have encountered some problems when deploying, check `pom.xml` for comments.
+1. Add your custom locales if you wish to.
+1. Compile it with maven as you always do.
+1. Move dependencies into `/WEB-INF/lib/` directory inside the deployment.
+
 ## Database
 1. Download and install your favourite RDBMS server. But, as being said above, it is recommended to use PostgreSQL.
 1. Create a database and a schema:
@@ -98,3 +104,12 @@ I recommend use Exploded WAR packaging, so it will be easy to install custom loc
 1. Create an account for creator:
    1. Register a new user using ezforum.
    1. Change it's rank to 0 in the database.
+
+# FAQ
+## I've got a long error stack trace.
+1. Add `-DANTLR_USE_DIRECT_CLASS_LOADING=true` to server's java_opts and try again.
+1. Check text below.
+If it doesn't help, there's a problem with your server, sorry, you're on your own now :(
+
+## I've got problems with locales.
+Check `pom.xml` for comments, there's explanation.
