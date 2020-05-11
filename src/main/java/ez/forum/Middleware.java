@@ -4,18 +4,15 @@ import java.util.Calendar;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import ez.forum.entities.User;
 import ez.forum.util.Locales;
-import ez.forum.util.SHARED_OBJECTS;
 import ez.forum.util.Themes;
 
 @Named
@@ -29,7 +26,6 @@ public class Middleware {
 	private String userLink = "login.xhtml";
 	private String userLinkText = "template.icons.register";
 	
-	private EntityManager em = SHARED_OBJECTS.emfactory.createEntityManager();
 	private ExternalContext context;
 	private Map<String, String> contextParams;
 	
@@ -68,11 +64,6 @@ public class Middleware {
 		else { theme = "rainy"; }
 		
 		if (locale == null || !Locales.locales.containsValue(locale)) { locale = "en"; }
-	}
-	
-	@PreDestroy
-	public void destroy() {
-		em.close();
 	}
 
 	public String getTheme() {

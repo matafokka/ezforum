@@ -9,7 +9,7 @@ import io.github.matafokka.bbcode_converter.BBCodeConverter;
 public class SHARED_OBJECTS {
 	public static EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("ezforum");
 	public static final Pattern emailPattern = Pattern.compile(".+@.+\\..+");
-	public static final BBCodeConverter conv = new BBCodeConverter();
+	public static BBCodeConverter conv = new BBCodeConverter();
 	
 	static {
 		conv.addComplexTag(
@@ -19,5 +19,7 @@ public class SHARED_OBJECTS {
 				"\" /></div></label>",
 				"", ""
 				);
+		conv.addSimpleTag("[CODE]", "<div class=\"post-code\">");
+		conv.addSimpleTag("[/CODE]", "</div>");
 	}
 }

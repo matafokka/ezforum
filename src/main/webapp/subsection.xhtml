@@ -20,7 +20,7 @@
 			<eztl:window
 			user="#{author}"
 			title="#{topic.name}"
-			time="#{topic.date}"
+			time="#{topic.date.toString().subSequence(0, 16)}"
 			>
 				<!-- Display message if this topic is locked -->
 				<h:panelGroup layout="block" class="notification" rendered="#{topic.lockedBy != null}">

@@ -20,7 +20,7 @@
 		<eztl:window
 			user="#{topicAuthor}"
 			title="#{topic.name}"
-			time="#{topic.date}"
+			time="#{topic.date.toString().subSequence(0, 16)}"
 			>
 			<object>
 				<h:outputText value="#{topic.getFormattedText()}" escape="false"/>
@@ -32,7 +32,7 @@
 			<ui:param name="author" value="#{post.user}" />
 			<eztl:window
 			user="#{author}"
-			time="#{post.date}"
+			time="#{post.date.toString().subSequence(0, 16)}"
 			customid="post-#{post.id}"
 			>
 				<object>
