@@ -38,8 +38,8 @@
     
     <!--
     
-    Uncomment it and code below if you have problems with locales and rebuild the project.
-    Beware: this plugin can cause major unstability due to it's dependencies!
+    Uncomment this code and code below if you have problems with locales and rebuild the project.
+    Beware: this plugin can cause major instability due to it's dependencies!
     I've excluded such dependencies for WildFly 18. IDK about your server though.
     
     <dependency>
@@ -65,7 +65,7 @@
     <finalName>ezforum</finalName>
     <!--
     
-    If you've uncommented code above, uncomment this one too
+    If you've uncommented code above, uncomment this part too
     
     <plugins>
       <plugin>
